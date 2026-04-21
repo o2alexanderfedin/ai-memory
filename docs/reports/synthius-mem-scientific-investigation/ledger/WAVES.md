@@ -8,7 +8,7 @@ Live status of the scientific investigation. Updated by Coordinator after each w
 | 1 | Schemas | ✅ DONE | G-001..G-010, G-111, G-113, G-116 | 13 | 29 | 18 | 7 | 0 | 0 |
 | 2 | Storage + CategoryRAG | ✅ DONE | G-011..G-017, G-019, G-054, G-107 | 10 | 21 | 16 | 3 | 0 | 0 |
 | 3 | Algorithms (extract/plan/consolidate/answer/psychometric) | ✅ DONE | G-021..G-050 (+related) | 28 | 35 | 28 | 4 | 0 | 0 |
-| 4 | Ops + Cost Model + Eval Reproducibility (+ numerical inconsistencies) | PENDING | G-032, G-051, G-063..G-070, G-082..G-105, G-109, G-114, G-115, G-036, G-093..G-100 | 39 | — | — | — | — | — |
+| 4 | Ops + Cost Model + Eval Reproducibility (+ numerical inconsistencies) | ✅ DONE | G-032, G-051, G-063..G-070, G-082..G-105, G-109, G-114, G-115, G-036, G-093..G-100 | 39 | 40 | 34 | 4 | 0 | 0 |
 | 5 | Security + Privacy + Threat Model | PENDING | G-026, G-052, G-053, G-055..G-062, G-080, G-081, G-110 | 14 | — | — | — | — | — |
 | 6 | Integration Contract + Multi-tenancy | PENDING | G-018, G-072..G-079, G-106, G-108, G-112 | 11 | — | — | — | — | — |
 | 7 | Long-tail MINOR/NIT cleanup | PENDING | (any remaining MINOR/NIT not resolved by group-in-wave) | variable | — | — | — | — | — |
@@ -16,6 +16,8 @@ Live status of the scientific investigation. Updated by Coordinator after each w
 **Total gaps in wave scope:** 115 (one gap — G-020 concurrency — moves to Wave 2 with storage siblings).
 
 **Last updated:** 2026-04-21 — Wave 3 complete. 28 theories promoted (T-035..T-062), 4 refuted (H-056, H-067, H-070, H-082), 3 revision-needed (H-054, H-055, H-060) carried forward as open questions blocked on Synthius source-code / author Q&A. Cumulative: 62 theories promoted (T-001..T-062), 14 refuted, 9 revision-needed. Zero hypotheses rev-exhausted. Wave 3 HIGH-confidence theories: T-042 (6 concurrent extraction calls), T-044 (per-fact WAL diff engine), T-046 (3-stage hybrid consolidation), T-048 (GPT-4.1-mini planner — externally confirmed), T-055 (dual-layer refusal gate).
+
+**Wave 4 complete (2026-04-22):** 34 theories promoted (T-063..T-096), 4 refuted (H-092 cost-model loser, H-093 USD cascade, H-095 LangMem-60s-is-real, H-105 forward-dated-pricing compound), 2 revision-needed (H-110 same-LLM-bias probe, H-113 CI-variance probe — both re-run in later waves with cross-family real-API probes). H-118 adjudicated as single narrowed theory T-089 (mis-citation + missing-ref) per Adjudicator directive, avoiding H-118a/b split. Cumulative: 96 theories promoted (T-001..T-096), 18 refuted, 11 revision-needed. Zero hypotheses rev-exhausted. Wave 4 HIGH-confidence theories: T-064–T-067 (prose-number typo cluster, three independent tables), T-068 (Table 7 canonical cost model — three-way converging tests), T-072 (embarrassingly-parallel per-persona scaling), T-073 (realistic production cost breakdown 6,300-8,500 tok/msg), T-075 (batch-only current pipeline), T-083 (judge-family bias reduces architecture-only contribution to 0-3 pp — MOST ARCHITECTURALLY CONSEQUENTIAL finding of the investigation), T-085 (per-participant isolation), T-086 (pass@1), T-088 (9-BLOCKER infra-only reproduction infeasibility), T-090 (F1 vs binary-judge metrics-category error), T-096 (20W brain rhetorical-only).
 
 ## Cost envelope tracking
 
