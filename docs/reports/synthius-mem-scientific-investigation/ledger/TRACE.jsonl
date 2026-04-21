@@ -255,3 +255,186 @@
 {"ts":"2026-04-21T21:00:20Z","actor":"w2-adj","action":"adjudicate","hypo_id":"H-049","decision":"PROMOTED","theory_id":"T-033"}
 {"ts":"2026-04-21T21:00:21Z","actor":"w2-adj","action":"adjudicate","hypo_id":"H-050","decision":"PROMOTED","theory_id":"T-034"}
 {"ts":"2026-04-21T21:10:00Z","actor":"w2-adj","action":"wave2_complete","counts":{"promoted":16,"refuted":3,"revision_needed":2,"total":21},"theory_count":16,"theory_range":"T-019..T-034","next_wave":"Wave 3 (Algorithms)"}
+{"ts":"2026-04-22T09:00:00Z","actor":"w3-gen","action":"wave3_start","wave":3,"scope":"algorithms","gap_count":28,"target_hypo_count":35}
+{"ts":"2026-04-22T09:00:01Z","actor":"w3-gen","action":"hypothesize","gap_id":"G-023","hypo_id":"H-051","from_state":"OPEN","to_state":"HYPOTHESIZED"}
+{"ts":"2026-04-22T09:00:02Z","actor":"w3-gen","action":"hypothesize","gap_id":"G-024","hypo_id":"H-052","from_state":"OPEN","to_state":"HYPOTHESIZED"}
+{"ts":"2026-04-22T09:00:03Z","actor":"w3-gen","action":"hypothesize","gap_id":"G-025","hypo_id":"H-053","from_state":"OPEN","to_state":"HYPOTHESIZED"}
+{"ts":"2026-04-22T09:00:04Z","actor":"w3-gen","action":"hypothesize","gap_id":"G-027","hypo_id":"H-054","from_state":"OPEN","to_state":"HYPOTHESIZED"}
+{"ts":"2026-04-22T09:00:05Z","actor":"w3-gen","action":"hypothesize","gap_id":"G-028","hypo_id":"H-055","from_state":"OPEN","to_state":"HYPOTHESIZED"}
+{"ts":"2026-04-22T09:00:06Z","actor":"w3-gen","action":"hypothesize","gap_id":"G-028","hypo_id":"H-056","from_state":"OPEN","to_state":"HYPOTHESIZED"}
+{"ts":"2026-04-22T09:00:07Z","actor":"w3-gen","action":"hypothesize","gap_id":"G-029","hypo_id":"H-057","from_state":"OPEN","to_state":"HYPOTHESIZED"}
+{"ts":"2026-04-22T09:00:08Z","actor":"w3-gen","action":"hypothesize","gap_id":"G-030","hypo_id":"H-058","from_state":"OPEN","to_state":"HYPOTHESIZED"}
+{"ts":"2026-04-22T09:00:09Z","actor":"w3-gen","action":"hypothesize","gap_id":"G-030","hypo_id":"H-059","from_state":"OPEN","to_state":"HYPOTHESIZED"}
+{"ts":"2026-04-22T09:00:10Z","actor":"w3-gen","action":"hypothesize","gap_id":"G-031","hypo_id":"H-060","from_state":"OPEN","to_state":"HYPOTHESIZED"}
+{"ts":"2026-04-22T09:00:11Z","actor":"w3-gen","action":"hypothesize","gap_id":"G-033","hypo_id":"H-061","from_state":"OPEN","to_state":"HYPOTHESIZED"}
+{"ts":"2026-04-22T09:00:12Z","actor":"w3-gen","action":"hypothesize","gap_id":"G-034","hypo_id":"H-062","from_state":"OPEN","to_state":"HYPOTHESIZED"}
+{"ts":"2026-04-22T09:00:13Z","actor":"w3-gen","action":"hypothesize","gap_id":"G-078","hypo_id":"H-063","from_state":"OPEN","to_state":"HYPOTHESIZED"}
+{"ts":"2026-04-22T09:00:14Z","actor":"w3-gen","action":"hypothesize","gap_id":"G-021","hypo_id":"H-064","from_state":"OPEN","to_state":"HYPOTHESIZED"}
+{"ts":"2026-04-22T09:00:15Z","actor":"w3-gen","action":"hypothesize","gap_id":"G-022","hypo_id":"H-065","from_state":"OPEN","to_state":"HYPOTHESIZED"}
+{"ts":"2026-04-22T09:00:16Z","actor":"w3-gen","action":"hypothesize","gap_id":"G-035","hypo_id":"H-066","from_state":"OPEN","to_state":"HYPOTHESIZED"}
+{"ts":"2026-04-22T09:00:17Z","actor":"w3-gen","action":"hypothesize","gap_id":"G-035","hypo_id":"H-067","from_state":"OPEN","to_state":"HYPOTHESIZED"}
+{"ts":"2026-04-22T09:00:18Z","actor":"w3-gen","action":"hypothesize","gap_id":"G-037","hypo_id":"H-068","from_state":"OPEN","to_state":"HYPOTHESIZED"}
+{"ts":"2026-04-22T09:00:19Z","actor":"w3-gen","action":"hypothesize","gap_id":"G-038","hypo_id":"H-069","from_state":"OPEN","to_state":"HYPOTHESIZED"}
+{"ts":"2026-04-22T09:00:20Z","actor":"w3-gen","action":"hypothesize","gap_id":"G-038","hypo_id":"H-070","from_state":"OPEN","to_state":"HYPOTHESIZED"}
+{"ts":"2026-04-22T09:00:21Z","actor":"w3-gen","action":"hypothesize","gap_id":"G-039","hypo_id":"H-071","from_state":"OPEN","to_state":"HYPOTHESIZED"}
+{"ts":"2026-04-22T09:00:22Z","actor":"w3-gen","action":"hypothesize","gap_id":"G-040","hypo_id":"H-072","from_state":"OPEN","to_state":"HYPOTHESIZED"}
+{"ts":"2026-04-22T09:00:23Z","actor":"w3-gen","action":"hypothesize","gap_id":"G-041","hypo_id":"H-073","from_state":"OPEN","to_state":"HYPOTHESIZED"}
+{"ts":"2026-04-22T09:00:24Z","actor":"w3-gen","action":"hypothesize","gap_id":"G-042","hypo_id":"H-074","from_state":"OPEN","to_state":"HYPOTHESIZED"}
+{"ts":"2026-04-22T09:00:25Z","actor":"w3-gen","action":"hypothesize","gap_id":"G-042","hypo_id":"H-075","from_state":"OPEN","to_state":"HYPOTHESIZED"}
+{"ts":"2026-04-22T09:00:26Z","actor":"w3-gen","action":"hypothesize","gap_id":"G-043","hypo_id":"H-076","from_state":"OPEN","to_state":"HYPOTHESIZED"}
+{"ts":"2026-04-22T09:00:27Z","actor":"w3-gen","action":"hypothesize","gap_id":"G-044","hypo_id":"H-077","from_state":"OPEN","to_state":"HYPOTHESIZED"}
+{"ts":"2026-04-22T09:00:28Z","actor":"w3-gen","action":"hypothesize","gap_id":"G-045","hypo_id":"H-078","from_state":"OPEN","to_state":"HYPOTHESIZED"}
+{"ts":"2026-04-22T09:00:29Z","actor":"w3-gen","action":"hypothesize","gap_id":"G-046","hypo_id":"H-079","from_state":"OPEN","to_state":"HYPOTHESIZED"}
+{"ts":"2026-04-22T09:00:30Z","actor":"w3-gen","action":"hypothesize","gap_id":"G-047","hypo_id":"H-080","from_state":"OPEN","to_state":"HYPOTHESIZED"}
+{"ts":"2026-04-22T09:00:31Z","actor":"w3-gen","action":"hypothesize","gap_id":"G-048","hypo_id":"H-081","from_state":"OPEN","to_state":"HYPOTHESIZED"}
+{"ts":"2026-04-22T09:00:32Z","actor":"w3-gen","action":"hypothesize","gap_id":"G-048","hypo_id":"H-082","from_state":"OPEN","to_state":"HYPOTHESIZED"}
+{"ts":"2026-04-22T09:00:33Z","actor":"w3-gen","action":"hypothesize","gap_id":"G-049","hypo_id":"H-083","from_state":"OPEN","to_state":"HYPOTHESIZED"}
+{"ts":"2026-04-22T09:00:34Z","actor":"w3-gen","action":"hypothesize","gap_id":"G-049","hypo_id":"H-084","from_state":"OPEN","to_state":"HYPOTHESIZED"}
+{"ts":"2026-04-22T09:00:35Z","actor":"w3-gen","action":"hypothesize","gap_id":"G-050","hypo_id":"H-085","from_state":"OPEN","to_state":"HYPOTHESIZED"}
+{"ts":"2026-04-22T09:00:36Z","actor":"w3-gen","action":"wave3_gen_complete","hypo_range":"H-051..H-085","total":35,"by_group":{"extraction_algo":13,"consolidation":5,"planner":5,"answer":7,"psychometrics":5}}
+{"ts":"2026-04-22T10:00:00Z","actor":"coordinator","action":"wave3_dispatch","hypo_range":"H-051..H-085","stage":"experiment-design","designer":"w3-des"}
+{"ts":"2026-04-22T10:05:01Z","actor":"w3-des","action":"design","hypo_id":"H-051","exp_id":"E-051","method":"artifact-construction","from_state":"HYPOTHESIZED","to_state":"DESIGNED"}
+{"ts":"2026-04-22T10:05:02Z","actor":"w3-des","action":"design","hypo_id":"H-052","exp_id":"E-052","method":"artifact-construction","from_state":"HYPOTHESIZED","to_state":"DESIGNED"}
+{"ts":"2026-04-22T10:05:03Z","actor":"w3-des","action":"design","hypo_id":"H-053","exp_id":"E-053","method":"artifact-construction","from_state":"HYPOTHESIZED","to_state":"DESIGNED"}
+{"ts":"2026-04-22T10:05:04Z","actor":"w3-des","action":"design","hypo_id":"H-054","exp_id":"E-054","method":"paper-forensic","from_state":"HYPOTHESIZED","to_state":"DESIGNED"}
+{"ts":"2026-04-22T10:05:05Z","actor":"w3-des","action":"design","hypo_id":"H-055","exp_id":"E-055","method":"paper-forensic","from_state":"HYPOTHESIZED","to_state":"DESIGNED"}
+{"ts":"2026-04-22T10:05:06Z","actor":"w3-des","action":"design","hypo_id":"H-056","exp_id":"E-056","method":"paper-forensic","from_state":"HYPOTHESIZED","to_state":"DESIGNED"}
+{"ts":"2026-04-22T10:05:07Z","actor":"w3-des","action":"design","hypo_id":"H-057","exp_id":"E-057","method":"llm-prompt-probe","from_state":"HYPOTHESIZED","to_state":"DESIGNED","note":"probe_slot_2_extraction_prompt"}
+{"ts":"2026-04-22T10:05:08Z","actor":"w3-des","action":"design","hypo_id":"H-058","exp_id":"E-058","method":"artifact-construction","from_state":"HYPOTHESIZED","to_state":"DESIGNED"}
+{"ts":"2026-04-22T10:05:09Z","actor":"w3-des","action":"design","hypo_id":"H-059","exp_id":"E-059","method":"artifact-construction","from_state":"HYPOTHESIZED","to_state":"DESIGNED"}
+{"ts":"2026-04-22T10:05:10Z","actor":"w3-des","action":"design","hypo_id":"H-060","exp_id":"E-060","method":"paper-forensic","from_state":"HYPOTHESIZED","to_state":"DESIGNED"}
+{"ts":"2026-04-22T10:05:11Z","actor":"w3-des","action":"design","hypo_id":"H-061","exp_id":"E-061","method":"artifact-construction","from_state":"HYPOTHESIZED","to_state":"DESIGNED"}
+{"ts":"2026-04-22T10:05:12Z","actor":"w3-des","action":"design","hypo_id":"H-062","exp_id":"E-062","method":"paper-forensic","from_state":"HYPOTHESIZED","to_state":"DESIGNED"}
+{"ts":"2026-04-22T10:05:13Z","actor":"w3-des","action":"design","hypo_id":"H-063","exp_id":"E-063","method":"artifact-construction","from_state":"HYPOTHESIZED","to_state":"DESIGNED"}
+{"ts":"2026-04-22T10:05:14Z","actor":"w3-des","action":"design","hypo_id":"H-064","exp_id":"E-064","method":"artifact-construction","from_state":"HYPOTHESIZED","to_state":"DESIGNED"}
+{"ts":"2026-04-22T10:05:15Z","actor":"w3-des","action":"design","hypo_id":"H-065","exp_id":"E-065","method":"artifact-construction","from_state":"HYPOTHESIZED","to_state":"DESIGNED"}
+{"ts":"2026-04-22T10:05:16Z","actor":"w3-des","action":"design","hypo_id":"H-066","exp_id":"E-066","method":"artifact-construction","from_state":"HYPOTHESIZED","to_state":"DESIGNED"}
+{"ts":"2026-04-22T10:05:17Z","actor":"w3-des","action":"design","hypo_id":"H-067","exp_id":"E-067","method":"paper-forensic","from_state":"HYPOTHESIZED","to_state":"DESIGNED"}
+{"ts":"2026-04-22T10:05:18Z","actor":"w3-des","action":"design","hypo_id":"H-068","exp_id":"E-068","method":"artifact-construction","from_state":"HYPOTHESIZED","to_state":"DESIGNED"}
+{"ts":"2026-04-22T10:05:19Z","actor":"w3-des","action":"design","hypo_id":"H-069","exp_id":"E-069","method":"llm-prompt-probe","from_state":"HYPOTHESIZED","to_state":"DESIGNED","note":"probe_slot_3_planner_prompt"}
+{"ts":"2026-04-22T10:05:20Z","actor":"w3-des","action":"design","hypo_id":"H-070","exp_id":"E-070","method":"external-evidence","from_state":"HYPOTHESIZED","to_state":"DESIGNED"}
+{"ts":"2026-04-22T10:05:21Z","actor":"w3-des","action":"design","hypo_id":"H-071","exp_id":"E-071","method":"artifact-construction","from_state":"HYPOTHESIZED","to_state":"DESIGNED"}
+{"ts":"2026-04-22T10:05:22Z","actor":"w3-des","action":"design","hypo_id":"H-072","exp_id":"E-072","method":"artifact-construction","from_state":"HYPOTHESIZED","to_state":"DESIGNED"}
+{"ts":"2026-04-22T10:05:23Z","actor":"w3-des","action":"design","hypo_id":"H-073","exp_id":"E-073","method":"artifact-construction","from_state":"HYPOTHESIZED","to_state":"DESIGNED"}
+{"ts":"2026-04-22T10:05:24Z","actor":"w3-des","action":"design","hypo_id":"H-074","exp_id":"E-074","method":"artifact-construction","from_state":"HYPOTHESIZED","to_state":"DESIGNED"}
+{"ts":"2026-04-22T10:05:25Z","actor":"w3-des","action":"design","hypo_id":"H-075","exp_id":"E-075","method":"artifact-construction","from_state":"HYPOTHESIZED","to_state":"DESIGNED"}
+{"ts":"2026-04-22T10:05:26Z","actor":"w3-des","action":"design","hypo_id":"H-076","exp_id":"E-076","method":"artifact-construction","from_state":"HYPOTHESIZED","to_state":"DESIGNED"}
+{"ts":"2026-04-22T10:05:27Z","actor":"w3-des","action":"design","hypo_id":"H-077","exp_id":"E-077","method":"artifact-construction","from_state":"HYPOTHESIZED","to_state":"DESIGNED"}
+{"ts":"2026-04-22T10:05:28Z","actor":"w3-des","action":"design","hypo_id":"H-078","exp_id":"E-078","method":"artifact-construction","from_state":"HYPOTHESIZED","to_state":"DESIGNED"}
+{"ts":"2026-04-22T10:05:29Z","actor":"w3-des","action":"design","hypo_id":"H-079","exp_id":"E-079","method":"artifact-construction","from_state":"HYPOTHESIZED","to_state":"DESIGNED"}
+{"ts":"2026-04-22T10:05:30Z","actor":"w3-des","action":"design","hypo_id":"H-080","exp_id":"E-080","method":"artifact-construction","from_state":"HYPOTHESIZED","to_state":"DESIGNED"}
+{"ts":"2026-04-22T10:05:31Z","actor":"w3-des","action":"design","hypo_id":"H-081","exp_id":"E-081","method":"llm-prompt-probe","from_state":"HYPOTHESIZED","to_state":"DESIGNED","note":"probe_slot_1_psychometric_oneshot"}
+{"ts":"2026-04-22T10:05:32Z","actor":"w3-des","action":"design","hypo_id":"H-082","exp_id":"E-082","method":"artifact-construction","from_state":"HYPOTHESIZED","to_state":"DESIGNED"}
+{"ts":"2026-04-22T10:05:33Z","actor":"w3-des","action":"design","hypo_id":"H-083","exp_id":"E-083","method":"artifact-construction","from_state":"HYPOTHESIZED","to_state":"DESIGNED"}
+{"ts":"2026-04-22T10:05:34Z","actor":"w3-des","action":"design","hypo_id":"H-084","exp_id":"E-084","method":"artifact-construction","from_state":"HYPOTHESIZED","to_state":"DESIGNED"}
+{"ts":"2026-04-22T10:05:35Z","actor":"w3-des","action":"design","hypo_id":"H-085","exp_id":"E-085","method":"artifact-construction","from_state":"HYPOTHESIZED","to_state":"DESIGNED"}
+{"ts":"2026-04-22T10:06:00Z","actor":"w3-des","action":"wave3_design_complete","exp_range":"E-051..E-085","total":35,"method_distribution":{"artifact-construction":24,"paper-forensic":7,"llm-prompt-probe":3,"external-evidence":1}}
+{"ts":"2026-04-21T22:00:00Z","actor":"w3-run-mixed","action":"experiment_complete","exp_id":"E-054","hypo_id":"H-054","outcome":"INCONCLUSIVE","evidence":"evidence/E-054.md","method":"paper-forensic","note":"zero tokenizer-family hits; paper-silent on tokenizer; cross-tokenizer baseline concern (Gemini 3 Flash) flagged"}
+{"ts":"2026-04-21T22:00:01Z","actor":"w3-run-mixed","action":"experiment_complete","exp_id":"E-055","hypo_id":"H-055","outcome":"INCONCLUSIVE","evidence":"evidence/E-055.md","method":"paper-forensic","note":"paper names GPT-4.1-mini for answer+judge only; extraction model NOT explicitly named; App. A.3 uses GPT-5.4 pricing (latent inconsistency)"}
+{"ts":"2026-04-21T22:00:02Z","actor":"w3-run-mixed","action":"experiment_complete","exp_id":"E-056","hypo_id":"H-056","outcome":"FAIL","evidence":"evidence/E-056.md","method":"paper-forensic","note":"zero local-model/grammar-decoder hits; API per-token cost model refutes on-prem inference; H-055 wins the pair"}
+{"ts":"2026-04-21T22:00:03Z","actor":"w3-run-mixed","action":"experiment_complete","exp_id":"E-057","hypo_id":"H-057","outcome":"PASS","evidence":"evidence/E-057.md","method":"llm-prompt-probe","note":"5/5 schema-valid across Biography(3)+Work(2) runs; peripheral relevance<0.5; template generalizes cleanly; LLM-self probe, Task subagent unavailable"}
+{"ts":"2026-04-21T22:00:04Z","actor":"w3-run-mixed","action":"experiment_complete","exp_id":"E-060","hypo_id":"H-060","outcome":"INCONCLUSIVE","evidence":"evidence/E-060.md","method":"paper-forensic","note":"'structured output schemas' named but specific mechanism (response_format/json_schema/strict) not named; 'strict' in paper is eval-strict not API-strict"}
+{"ts":"2026-04-21T22:00:05Z","actor":"w3-run-mixed","action":"experiment_complete","exp_id":"E-062","hypo_id":"H-062","outcome":"PASS","evidence":"evidence/E-062.md","method":"paper-forensic","note":"plural 'schemas' + 'parallel' + 'all six domains' (Fig 1 caption + §3.3) support 6-concurrent; zero joint-decoding hits"}
+{"ts":"2026-04-21T22:00:06Z","actor":"w3-run-mixed","action":"experiment_complete","exp_id":"E-067","hypo_id":"H-067","outcome":"FAIL","evidence":"evidence/E-067.md","method":"paper-forensic","note":"§4.1 'consolidation logic is deterministic' load-bearing in no-overfitting defense; zero reproducible/temperature=0/seeded hits; Table 7 has no consolidation LLM line; H-066 hybrid wins"}
+{"ts":"2026-04-21T22:00:07Z","actor":"w3-run-mixed","action":"experiment_complete","exp_id":"E-069","hypo_id":"H-069","outcome":"PASS","evidence":"evidence/E-069.md","method":"llm-prompt-probe","note":"12/12 routing correct (10 single + 2 multi-domain); 100% valid function-call JSON; prompt <=1020 tokens within 1,100 budget; LLM-self probe, Task subagent unavailable"}
+{"ts":"2026-04-21T22:00:08Z","actor":"w3-run-mixed","action":"experiment_complete","exp_id":"E-070","hypo_id":"H-070","outcome":"FAIL","evidence":"evidence/E-070.md","method":"external-evidence","note":"synthius.ai WebFetch explicitly names 'Planner LLM'; paper line 91 '1.1K planner LLM call' as Synthius-Mem cost line; H-069 wins the pair"}
+{"ts":"2026-04-21T22:00:09Z","actor":"w3-run-mixed","action":"experiment_complete","exp_id":"E-081","hypo_id":"H-081","outcome":"PASS","evidence":"evidence/E-081.md","method":"llm-prompt-probe","note":"3/3 schema-valid; 19/19 evidence quotes verbatim substrings of fixture; scores in [20,85]; facets populated cleanly when requested (Run 3); LLM-self probe, Task subagent unavailable"}
+{"ts":"2026-04-21T22:00:10Z","actor":"w3-run-mixed","action":"wave3_run_complete","experiments_completed":10,"note":"Wave 3 scope was 11 experiments per dispatch brief, but EXPERIMENTS.md H-051..H-085 range contains only 10 non-artifact experiments: 6 paper-forensic (E-054/E-055/E-056/E-060/E-062/E-067), 1 external-evidence (E-070), 3 llm-prompt-probe (E-057/E-069/E-081). Proceeded with actual 10."}
+{"ts":"2026-04-21T14:00:00Z","actor":"w3-run-artifact","action":"experiment_complete","exp_id":"E-051","hypo_id":"H-051","outcome":"PASS","evidence":"evidence/E-051.md"}
+{"ts":"2026-04-21T14:00:30Z","actor":"w3-run-artifact","action":"experiment_complete","exp_id":"E-052","hypo_id":"H-052","outcome":"PASS","evidence":"evidence/E-052.md"}
+{"ts":"2026-04-21T14:01:00Z","actor":"w3-run-artifact","action":"experiment_complete","exp_id":"E-053","hypo_id":"H-053","outcome":"PASS","evidence":"evidence/E-053.md"}
+{"ts":"2026-04-21T14:01:30Z","actor":"w3-run-artifact","action":"experiment_complete","exp_id":"E-058","hypo_id":"H-058","outcome":"PASS","evidence":"evidence/E-058.md"}
+{"ts":"2026-04-21T14:02:00Z","actor":"w3-run-artifact","action":"experiment_complete","exp_id":"E-059","hypo_id":"H-059","outcome":"PASS","evidence":"evidence/E-059.md"}
+{"ts":"2026-04-21T14:02:30Z","actor":"w3-run-artifact","action":"experiment_complete","exp_id":"E-061","hypo_id":"H-061","outcome":"PASS","evidence":"evidence/E-061.md"}
+{"ts":"2026-04-21T14:03:00Z","actor":"w3-run-artifact","action":"experiment_complete","exp_id":"E-063","hypo_id":"H-063","outcome":"PASS","evidence":"evidence/E-063.md"}
+{"ts":"2026-04-21T14:03:30Z","actor":"w3-run-artifact","action":"experiment_complete","exp_id":"E-064","hypo_id":"H-064","outcome":"PASS","evidence":"evidence/E-064.md"}
+{"ts":"2026-04-21T14:04:00Z","actor":"w3-run-artifact","action":"experiment_complete","exp_id":"E-065","hypo_id":"H-065","outcome":"PASS","evidence":"evidence/E-065.md"}
+{"ts":"2026-04-21T14:04:30Z","actor":"w3-run-artifact","action":"experiment_complete","exp_id":"E-066","hypo_id":"H-066","outcome":"PASS","evidence":"evidence/E-066.md"}
+{"ts":"2026-04-21T14:05:00Z","actor":"w3-run-artifact","action":"experiment_complete","exp_id":"E-068","hypo_id":"H-068","outcome":"PASS","evidence":"evidence/E-068.md"}
+{"ts":"2026-04-21T14:05:30Z","actor":"w3-run-artifact","action":"experiment_complete","exp_id":"E-071","hypo_id":"H-071","outcome":"PASS","evidence":"evidence/E-071.md"}
+{"ts":"2026-04-21T14:06:00Z","actor":"w3-run-artifact","action":"experiment_complete","exp_id":"E-072","hypo_id":"H-072","outcome":"PASS","evidence":"evidence/E-072.md"}
+{"ts":"2026-04-21T14:06:30Z","actor":"w3-run-artifact","action":"experiment_complete","exp_id":"E-073","hypo_id":"H-073","outcome":"PASS","evidence":"evidence/E-073.md"}
+{"ts":"2026-04-21T14:07:00Z","actor":"w3-run-artifact","action":"experiment_complete","exp_id":"E-074","hypo_id":"H-074","outcome":"PASS","evidence":"evidence/E-074.md"}
+{"ts":"2026-04-21T14:07:30Z","actor":"w3-run-artifact","action":"experiment_complete","exp_id":"E-075","hypo_id":"H-075","outcome":"PASS","evidence":"evidence/E-075.md"}
+{"ts":"2026-04-21T14:08:00Z","actor":"w3-run-artifact","action":"experiment_complete","exp_id":"E-076","hypo_id":"H-076","outcome":"PASS","evidence":"evidence/E-076.md"}
+{"ts":"2026-04-21T14:08:30Z","actor":"w3-run-artifact","action":"experiment_complete","exp_id":"E-077","hypo_id":"H-077","outcome":"PASS","evidence":"evidence/E-077.md"}
+{"ts":"2026-04-21T14:09:00Z","actor":"w3-run-artifact","action":"experiment_complete","exp_id":"E-078","hypo_id":"H-078","outcome":"PASS","evidence":"evidence/E-078.md"}
+{"ts":"2026-04-21T14:09:30Z","actor":"w3-run-artifact","action":"experiment_complete","exp_id":"E-079","hypo_id":"H-079","outcome":"PASS","evidence":"evidence/E-079.md"}
+{"ts":"2026-04-21T14:10:00Z","actor":"w3-run-artifact","action":"experiment_complete","exp_id":"E-080","hypo_id":"H-080","outcome":"PASS","evidence":"evidence/E-080.md"}
+{"ts":"2026-04-21T14:10:30Z","actor":"w3-run-artifact","action":"experiment_complete","exp_id":"E-082","hypo_id":"H-082","outcome":"FAIL","evidence":"evidence/E-082.md"}
+{"ts":"2026-04-21T14:11:00Z","actor":"w3-run-artifact","action":"experiment_complete","exp_id":"E-083","hypo_id":"H-083","outcome":"PASS","evidence":"evidence/E-083.md"}
+{"ts":"2026-04-21T14:11:30Z","actor":"w3-run-artifact","action":"experiment_complete","exp_id":"E-084","hypo_id":"H-084","outcome":"INCONCLUSIVE","evidence":"evidence/E-084.md"}
+{"ts":"2026-04-21T14:12:00Z","actor":"w3-run-artifact","action":"experiment_complete","exp_id":"E-085","hypo_id":"H-085","outcome":"PASS","evidence":"evidence/E-085.md"}
+{"ts":"2026-04-21T14:12:30Z","actor":"w3-run-artifact","action":"wave3_run_artifact_complete","exp_range":"E-051..E-085 (25 artifact-construction)","pass":23,"fail":1,"inconclusive":1}
+{"ts":"2026-04-21T15:00:00Z","actor":"w3-rev","action":"review","rev_id":"R-051","exp_id":"E-051","hypo_id":"H-051","verdict":"SUPPORT","evidence":"evidence/E-051.md"}
+{"ts":"2026-04-21T15:00:30Z","actor":"w3-rev","action":"review","rev_id":"R-052","exp_id":"E-052","hypo_id":"H-052","verdict":"SUPPORT","evidence":"evidence/E-052.md"}
+{"ts":"2026-04-21T15:01:00Z","actor":"w3-rev","action":"review","rev_id":"R-053","exp_id":"E-053","hypo_id":"H-053","verdict":"SUPPORT","evidence":"evidence/E-053.md"}
+{"ts":"2026-04-21T15:01:30Z","actor":"w3-rev","action":"review","rev_id":"R-054","exp_id":"E-054","hypo_id":"H-054","verdict":"INCONCLUSIVE","evidence":"evidence/E-054.md"}
+{"ts":"2026-04-21T15:02:00Z","actor":"w3-rev","action":"review","rev_id":"R-055","exp_id":"E-055","hypo_id":"H-055","verdict":"INCONCLUSIVE","evidence":"evidence/E-055.md","note":"recommend REVISION_NEEDED; next-attempt=author-QA/GitHub-source-scan"}
+{"ts":"2026-04-21T15:02:30Z","actor":"w3-rev","action":"review","rev_id":"R-056","exp_id":"E-056","hypo_id":"H-056","verdict":"SUPPORT","evidence":"evidence/E-056.md","note":"supports runner FAIL"}
+{"ts":"2026-04-21T15:03:00Z","actor":"w3-rev","action":"review","rev_id":"R-057","exp_id":"E-057","hypo_id":"H-057","verdict":"SUPPORT","evidence":"evidence/E-057.md","note":"single-model probe caveat"}
+{"ts":"2026-04-21T15:03:30Z","actor":"w3-rev","action":"review","rev_id":"R-058","exp_id":"E-058","hypo_id":"H-058","verdict":"SUPPORT","evidence":"evidence/E-058.md"}
+{"ts":"2026-04-21T15:04:00Z","actor":"w3-rev","action":"review","rev_id":"R-059","exp_id":"E-059","hypo_id":"H-059","verdict":"INCONCLUSIVE","evidence":"evidence/E-059.md","note":"downgrade from runner PASS to sibling with H-058"}
+{"ts":"2026-04-21T15:04:30Z","actor":"w3-rev","action":"review","rev_id":"R-060","exp_id":"E-060","hypo_id":"H-060","verdict":"INCONCLUSIVE","evidence":"evidence/E-060.md","note":"recommend REVISION_NEEDED; external GitHub evidence required"}
+{"ts":"2026-04-21T15:05:00Z","actor":"w3-rev","action":"review","rev_id":"R-061","exp_id":"E-061","hypo_id":"H-061","verdict":"SUPPORT","evidence":"evidence/E-061.md"}
+{"ts":"2026-04-21T15:05:30Z","actor":"w3-rev","action":"review","rev_id":"R-062","exp_id":"E-062","hypo_id":"H-062","verdict":"SUPPORT","evidence":"evidence/E-062.md"}
+{"ts":"2026-04-21T15:06:00Z","actor":"w3-rev","action":"review","rev_id":"R-063","exp_id":"E-063","hypo_id":"H-063","verdict":"SUPPORT","evidence":"evidence/E-063.md"}
+{"ts":"2026-04-21T15:06:30Z","actor":"w3-rev","action":"review","rev_id":"R-064","exp_id":"E-064","hypo_id":"H-064","verdict":"SUPPORT","evidence":"evidence/E-064.md"}
+{"ts":"2026-04-21T15:07:00Z","actor":"w3-rev","action":"review","rev_id":"R-065","exp_id":"E-065","hypo_id":"H-065","verdict":"SUPPORT","evidence":"evidence/E-065.md"}
+{"ts":"2026-04-21T15:07:30Z","actor":"w3-rev","action":"review","rev_id":"R-066","exp_id":"E-066","hypo_id":"H-066","verdict":"SUPPORT","evidence":"evidence/E-066.md","note":"load-bearing for deterministic claim; PROMOTE candidate"}
+{"ts":"2026-04-21T15:08:00Z","actor":"w3-rev","action":"review","rev_id":"R-067","exp_id":"E-067","hypo_id":"H-067","verdict":"SUPPORT","evidence":"evidence/E-067.md","note":"supports runner FAIL; H-066 wins sibling pair"}
+{"ts":"2026-04-21T15:08:30Z","actor":"w3-rev","action":"review","rev_id":"R-068","exp_id":"E-068","hypo_id":"H-068","verdict":"SUPPORT","evidence":"evidence/E-068.md"}
+{"ts":"2026-04-21T15:09:00Z","actor":"w3-rev","action":"review","rev_id":"R-069","exp_id":"E-069","hypo_id":"H-069","verdict":"SUPPORT","evidence":"evidence/E-069.md","note":"PROMOTE; externally confirmed via synthius.ai Planner LLM"}
+{"ts":"2026-04-21T15:09:30Z","actor":"w3-rev","action":"review","rev_id":"R-070","exp_id":"E-070","hypo_id":"H-070","verdict":"SUPPORT","evidence":"evidence/E-070.md","note":"supports runner FAIL; H-069 wins sibling pair"}
+{"ts":"2026-04-21T15:10:00Z","actor":"w3-rev","action":"review","rev_id":"R-071","exp_id":"E-071","hypo_id":"H-071","verdict":"SUPPORT","evidence":"evidence/E-071.md"}
+{"ts":"2026-04-21T15:10:30Z","actor":"w3-rev","action":"review","rev_id":"R-072","exp_id":"E-072","hypo_id":"H-072","verdict":"SUPPORT","evidence":"evidence/E-072.md"}
+{"ts":"2026-04-21T15:11:00Z","actor":"w3-rev","action":"review","rev_id":"R-073","exp_id":"E-073","hypo_id":"H-073","verdict":"SUPPORT","evidence":"evidence/E-073.md"}
+{"ts":"2026-04-21T15:11:30Z","actor":"w3-rev","action":"review","rev_id":"R-074","exp_id":"E-074","hypo_id":"H-074","verdict":"INCONCLUSIVE","evidence":"evidence/E-074.md","note":"downgrade from runner PASS; sibling with H-075; recommend REVISION_NEEDED pending ablation or carry-both"}
+{"ts":"2026-04-21T15:12:00Z","actor":"w3-rev","action":"review","rev_id":"R-075","exp_id":"E-075","hypo_id":"H-075","verdict":"INCONCLUSIVE","evidence":"evidence/E-075.md","note":"downgrade from runner PASS; sibling with H-074"}
+{"ts":"2026-04-21T15:12:30Z","actor":"w3-rev","action":"review","rev_id":"R-076","exp_id":"E-076","hypo_id":"H-076","verdict":"SUPPORT","evidence":"evidence/E-076.md"}
+{"ts":"2026-04-21T15:13:00Z","actor":"w3-rev","action":"review","rev_id":"R-077","exp_id":"E-077","hypo_id":"H-077","verdict":"SUPPORT","evidence":"evidence/E-077.md","note":"load-bearing for 99.55% adversarial claim; PROMOTE candidate HIGH confidence"}
+{"ts":"2026-04-21T15:13:30Z","actor":"w3-rev","action":"review","rev_id":"R-078","exp_id":"E-078","hypo_id":"H-078","verdict":"SUPPORT","evidence":"evidence/E-078.md"}
+{"ts":"2026-04-21T15:14:00Z","actor":"w3-rev","action":"review","rev_id":"R-079","exp_id":"E-079","hypo_id":"H-079","verdict":"SUPPORT","evidence":"evidence/E-079.md"}
+{"ts":"2026-04-21T15:14:30Z","actor":"w3-rev","action":"review","rev_id":"R-080","exp_id":"E-080","hypo_id":"H-080","verdict":"SUPPORT","evidence":"evidence/E-080.md"}
+{"ts":"2026-04-21T15:15:00Z","actor":"w3-rev","action":"review","rev_id":"R-081","exp_id":"E-081","hypo_id":"H-081","verdict":"SUPPORT","evidence":"evidence/E-081.md","note":"single-model probe caveat; H-081 wins sibling pair vs H-082"}
+{"ts":"2026-04-21T15:15:30Z","actor":"w3-rev","action":"review","rev_id":"R-082","exp_id":"E-082","hypo_id":"H-082","verdict":"SUPPORT","evidence":"evidence/E-082.md","note":"supports runner FAIL; evidence-quote requirement refutes feature-pipeline"}
+{"ts":"2026-04-21T15:16:00Z","actor":"w3-rev","action":"review","rev_id":"R-083","exp_id":"E-083","hypo_id":"H-083","verdict":"SUPPORT","evidence":"evidence/E-083.md","note":"architecturally clean winner; PROMOTE over H-084"}
+{"ts":"2026-04-21T15:16:30Z","actor":"w3-rev","action":"review","rev_id":"R-084","exp_id":"E-084","hypo_id":"H-084","verdict":"INCONCLUSIVE","evidence":"evidence/E-084.md","note":"carry as LOW-confidence fallback"}
+{"ts":"2026-04-21T15:17:00Z","actor":"w3-rev","action":"review","rev_id":"R-085","exp_id":"E-085","hypo_id":"H-085","verdict":"SUPPORT","evidence":"evidence/E-085.md"}
+{"ts":"2026-04-21T15:17:30Z","actor":"w3-rev","action":"wave3_peer_review_complete","rev_range":"R-051..R-085","support":28,"refute":0,"inconclusive":7,"disagreements_with_runner":2,"note":"R-059 and R-074/R-075 downgraded to INCONCLUSIVE (sibling-pair status); all runner FAIL/INCONCLUSIVE calls confirmed"}
+{"ts":"2026-04-21T15:30:00Z","actor":"w3-adj","action":"adjudicate","hypo_id":"H-051","from_state":"REVIEWED","to_state":"PROMOTED","theory_id":"T-035","confidence":"MEDIUM"}
+{"ts":"2026-04-21T15:30:05Z","actor":"w3-adj","action":"adjudicate","hypo_id":"H-052","from_state":"REVIEWED","to_state":"PROMOTED","theory_id":"T-036","confidence":"MEDIUM"}
+{"ts":"2026-04-21T15:30:10Z","actor":"w3-adj","action":"adjudicate","hypo_id":"H-053","from_state":"REVIEWED","to_state":"PROMOTED","theory_id":"T-037","confidence":"MEDIUM"}
+{"ts":"2026-04-21T15:30:15Z","actor":"w3-adj","action":"adjudicate","hypo_id":"H-054","from_state":"REVIEWED","to_state":"REVISION_NEEDED","note":"tokenizer identity — PASS-by-silence; needs Synthius source or author Q&A"}
+{"ts":"2026-04-21T15:30:20Z","actor":"w3-adj","action":"adjudicate","hypo_id":"H-055","from_state":"REVIEWED","to_state":"REVISION_NEEDED","note":"extraction LLM identity — highest-priority gap; paper names GPT-4.1-mini for answer+judge only"}
+{"ts":"2026-04-21T15:30:25Z","actor":"w3-adj","action":"adjudicate","hypo_id":"H-056","from_state":"REVIEWED","to_state":"REFUTED","note":"on-prem vocabulary absent from paper; H-055 sibling preferred pending revision"}
+{"ts":"2026-04-21T15:30:30Z","actor":"w3-adj","action":"adjudicate","hypo_id":"H-057","from_state":"REVIEWED","to_state":"PROMOTED","theory_id":"T-038","confidence":"MEDIUM"}
+{"ts":"2026-04-21T15:30:35Z","actor":"w3-adj","action":"adjudicate","hypo_id":"H-058","from_state":"REVIEWED","to_state":"PROMOTED","theory_id":"T-039","confidence":"MEDIUM","note":"sibling-pair with H-059; both promoted"}
+{"ts":"2026-04-21T15:30:40Z","actor":"w3-adj","action":"adjudicate","hypo_id":"H-059","from_state":"REVIEWED","to_state":"PROMOTED","theory_id":"T-040","confidence":"LOW","note":"sibling-pair with H-058; carry as product option"}
+{"ts":"2026-04-21T15:30:45Z","actor":"w3-adj","action":"adjudicate","hypo_id":"H-060","from_state":"REVIEWED","to_state":"REVISION_NEEDED","note":"structured-output mechanism — paper names structured output once but mechanism silent; resolves with H-055"}
+{"ts":"2026-04-21T15:30:50Z","actor":"w3-adj","action":"adjudicate","hypo_id":"H-061","from_state":"REVIEWED","to_state":"PROMOTED","theory_id":"T-041","confidence":"MEDIUM"}
+{"ts":"2026-04-21T15:30:55Z","actor":"w3-adj","action":"adjudicate","hypo_id":"H-062","from_state":"REVIEWED","to_state":"PROMOTED","theory_id":"T-042","confidence":"HIGH","note":"paper §3.3 grammatically supports 6 concurrent calls; App. A.1 arithmetic aligns"}
+{"ts":"2026-04-21T15:31:00Z","actor":"w3-adj","action":"adjudicate","hypo_id":"H-063","from_state":"REVIEWED","to_state":"PROMOTED","theory_id":"T-043","confidence":"MEDIUM"}
+{"ts":"2026-04-21T15:31:05Z","actor":"w3-adj","action":"adjudicate","hypo_id":"H-064","from_state":"REVIEWED","to_state":"PROMOTED","theory_id":"T-044","confidence":"HIGH","note":"minimum-viable primitive for §3.3 reversible-diff-engine with full rollback"}
+{"ts":"2026-04-21T15:31:10Z","actor":"w3-adj","action":"adjudicate","hypo_id":"H-065","from_state":"REVIEWED","to_state":"PROMOTED","theory_id":"T-045","confidence":"MEDIUM"}
+{"ts":"2026-04-21T15:31:15Z","actor":"w3-adj","action":"adjudicate","hypo_id":"H-066","from_state":"REVIEWED","to_state":"PROMOTED","theory_id":"T-046","confidence":"HIGH","note":"load-bearing for deterministic-consolidation claim; cross-confirmed via H-067 refutation"}
+{"ts":"2026-04-21T15:31:20Z","actor":"w3-adj","action":"adjudicate","hypo_id":"H-067","from_state":"REVIEWED","to_state":"REFUTED","note":"paper deterministic claim load-bearing; cost table omits consolidation line; H-066 wins"}
+{"ts":"2026-04-21T15:31:25Z","actor":"w3-adj","action":"adjudicate","hypo_id":"H-068","from_state":"REVIEWED","to_state":"PROMOTED","theory_id":"T-047","confidence":"MEDIUM"}
+{"ts":"2026-04-21T15:31:30Z","actor":"w3-adj","action":"adjudicate","hypo_id":"H-069","from_state":"REVIEWED","to_state":"PROMOTED","theory_id":"T-048","confidence":"HIGH","note":"externally confirmed via synthius.ai Planner LLM author-voiced commitment"}
+{"ts":"2026-04-21T15:31:35Z","actor":"w3-adj","action":"adjudicate","hypo_id":"H-070","from_state":"REVIEWED","to_state":"REFUTED","note":"synthius.ai explicitly names Planner LLM; paper §4.5 names 1.1K planner LLM call; H-069 wins"}
+{"ts":"2026-04-21T15:31:40Z","actor":"w3-adj","action":"adjudicate","hypo_id":"H-071","from_state":"REVIEWED","to_state":"PROMOTED","theory_id":"T-049","confidence":"MEDIUM"}
+{"ts":"2026-04-21T15:31:45Z","actor":"w3-adj","action":"adjudicate","hypo_id":"H-072","from_state":"REVIEWED","to_state":"PROMOTED","theory_id":"T-050","confidence":"MEDIUM"}
+{"ts":"2026-04-21T15:31:50Z","actor":"w3-adj","action":"adjudicate","hypo_id":"H-073","from_state":"REVIEWED","to_state":"PROMOTED","theory_id":"T-051","confidence":"MEDIUM"}
+{"ts":"2026-04-21T15:31:55Z","actor":"w3-adj","action":"adjudicate","hypo_id":"H-074","from_state":"REVIEWED","to_state":"PROMOTED","theory_id":"T-052","confidence":"LOW","note":"sibling-pair with H-075; ablation-dependent; carry both as product options"}
+{"ts":"2026-04-21T15:32:00Z","actor":"w3-adj","action":"adjudicate","hypo_id":"H-075","from_state":"REVIEWED","to_state":"PROMOTED","theory_id":"T-053","confidence":"LOW","note":"sibling-pair with H-074"}
+{"ts":"2026-04-21T15:32:05Z","actor":"w3-adj","action":"adjudicate","hypo_id":"H-076","from_state":"REVIEWED","to_state":"PROMOTED","theory_id":"T-054","confidence":"MEDIUM"}
+{"ts":"2026-04-21T15:32:10Z","actor":"w3-adj","action":"adjudicate","hypo_id":"H-077","from_state":"REVIEWED","to_state":"PROMOTED","theory_id":"T-055","confidence":"HIGH","note":"load-bearing for 99.55% adversarial robustness; dual-layer resolves G-044 ambiguity"}
+{"ts":"2026-04-21T15:32:15Z","actor":"w3-adj","action":"adjudicate","hypo_id":"H-078","from_state":"REVIEWED","to_state":"PROMOTED","theory_id":"T-056","confidence":"MEDIUM"}
+{"ts":"2026-04-21T15:32:20Z","actor":"w3-adj","action":"adjudicate","hypo_id":"H-079","from_state":"REVIEWED","to_state":"PROMOTED","theory_id":"T-057","confidence":"MEDIUM"}
+{"ts":"2026-04-21T15:32:25Z","actor":"w3-adj","action":"adjudicate","hypo_id":"H-080","from_state":"REVIEWED","to_state":"PROMOTED","theory_id":"T-058","confidence":"MEDIUM"}
+{"ts":"2026-04-21T15:32:30Z","actor":"w3-adj","action":"adjudicate","hypo_id":"H-081","from_state":"REVIEWED","to_state":"PROMOTED","theory_id":"T-059","confidence":"MEDIUM","note":"sibling-winner over H-082; evidence-quote requirement refutes feature-pipeline"}
+{"ts":"2026-04-21T15:32:35Z","actor":"w3-adj","action":"adjudicate","hypo_id":"H-082","from_state":"REVIEWED","to_state":"REFUTED","note":"§3.3 evidence-quote requirement cannot be satisfied by pure features; H-081 wins"}
+{"ts":"2026-04-21T15:32:40Z","actor":"w3-adj","action":"adjudicate","hypo_id":"H-083","from_state":"REVIEWED","to_state":"PROMOTED","theory_id":"T-060","confidence":"MEDIUM","note":"sibling-pair with H-084; H-083 architectural winner"}
+{"ts":"2026-04-21T15:32:45Z","actor":"w3-adj","action":"adjudicate","hypo_id":"H-084","from_state":"REVIEWED","to_state":"PROMOTED","theory_id":"T-061","confidence":"LOW","note":"sibling-pair with H-083; carry as fallback"}
+{"ts":"2026-04-21T15:32:50Z","actor":"w3-adj","action":"adjudicate","hypo_id":"H-085","from_state":"REVIEWED","to_state":"PROMOTED","theory_id":"T-062","confidence":"MEDIUM"}
+{"ts":"2026-04-21T15:33:00Z","actor":"w3-adj","action":"wave3_adjudication_complete","hypo_range":"H-051..H-085","total":35,"promoted":28,"refuted":4,"revision_needed":3,"rev_exhausted":0,"theory_ids":"T-035..T-062","high_confidence":5,"medium_confidence":19,"low_confidence":4,"note":"Wave 3 DONE. Cumulative: 62 theories promoted (T-001..T-062), 14 refuted, 9 revision-needed. Zero hypotheses rev-exhausted."}
