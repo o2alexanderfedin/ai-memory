@@ -6,7 +6,7 @@ Live status of the scientific investigation. Updated by Coordinator after each w
 |:---:|---|---|---|---:|---:|---:|---:|---:|---:|
 | 0 | Gap Catalog | ✅ DONE | G-001..G-116 | 116 | — | — | — | — | — |
 | 1 | Schemas | ✅ DONE | G-001..G-010, G-111, G-113, G-116 | 13 | 29 | 18 | 7 | 0 | 0 |
-| 2 | Storage + CategoryRAG | PENDING | G-011..G-017, G-019, G-054, G-107 | 10 | — | — | — | — | — |
+| 2 | Storage + CategoryRAG | ✅ DONE | G-011..G-017, G-019, G-054, G-107 | 10 | 21 | 16 | 3 | 0 | 0 |
 | 3 | Algorithms (extract/plan/consolidate/answer/psychometric) | PENDING | G-021..G-050 (+related) | 28 | — | — | — | — | — |
 | 4 | Ops + Cost Model + Eval Reproducibility (+ numerical inconsistencies) | PENDING | G-032, G-051, G-063..G-070, G-082..G-105, G-109, G-114, G-115, G-036, G-093..G-100 | 39 | — | — | — | — | — |
 | 5 | Security + Privacy + Threat Model | PENDING | G-026, G-052, G-053, G-055..G-062, G-080, G-081, G-110 | 14 | — | — | — | — | — |
@@ -15,7 +15,7 @@ Live status of the scientific investigation. Updated by Coordinator after each w
 
 **Total gaps in wave scope:** 115 (one gap — G-020 concurrency — moves to Wave 2 with storage siblings).
 
-**Last updated:** 2026-04-21 — Wave 1 complete. 18 theories promoted (T-001..T-018), 7 refuted, 4 revision-needed (H-017, H-022, H-023, H-027) carried to future waves. Zero hypotheses rev-exhausted (Wave 1 is the first pass).
+**Last updated:** 2026-04-21 — Wave 2 complete. 16 theories promoted (T-019..T-034), 3 refuted (H-032, H-038, H-040), 2 revision-needed (H-044, H-045) carried forward as open product choices on result-ranking policy. Cumulative: 34 theories promoted (T-001..T-034), 10 refuted, 6 revision-needed. Zero hypotheses rev-exhausted.
 
 ## Cost envelope tracking
 
