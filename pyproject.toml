@@ -42,7 +42,7 @@ python_version = "3.12"
 strict = true
 disallow_any_explicit = true
 disallow_any_generics = true
-exclude = ["alembic/"]
+exclude = ["alembic/", "tests/integration/bench_"]
 
 [build-system]
 requires = ["hatchling"]
