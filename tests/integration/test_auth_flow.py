@@ -2,6 +2,7 @@
 from datetime import timedelta
 from uuid import uuid4
 
+from fastapi import status
 from fastapi.testclient import TestClient
 
 from synthius_mem.auth.jwt import issue_token
@@ -12,7 +13,7 @@ client = TestClient(app)
 
 def test_unauthenticated_request_to_protected_endpoint_returns_401() -> None:
     resp = client.get("/personas")
-    assert resp.status_code == 401
+    assert resp.status_code == status.HTTP_401_UNAUTHORIZED
 
 
 def test_valid_token_allows_access() -> None:
@@ -21,10 +22,10 @@ def test_valid_token_allows_access() -> None:
                         expires_in=timedelta(minutes=5))
     resp = client.get("/personas", headers={"Authorization": f"Bearer {token}"})
     # 200 or 404 acceptable; what matters: NOT 401
-    assert resp.status_code != 401
+    assert resp.status_code != status.HTTP_401_UNAUTHORIZED
 
 
 def test_invalid_token_returns_401() -> None:
     resp = client.get("/personas",
                       headers={"Authorization": "Bearer not.a.token"})
-    assert resp.status_code == 401
+    assert resp.status_code == status.HTTP_401_UNAUTHORIZED
