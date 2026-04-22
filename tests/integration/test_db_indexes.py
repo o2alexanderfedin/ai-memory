@@ -26,3 +26,29 @@ def test_each_domain_has_gin_and_btree_indexes() -> None:
         table = metadata.tables[table_name]
         idx_names = {idx.name for idx in table.indexes}
         assert any("gin" in n for n in idx_names), f"{table_name} missing GIN index"
+
+
+def test_metadata_has_tenants_personas_attestations() -> None:
+    table_names = {t.name for t in metadata.sorted_tables}
+    expected = {"tenants", "personas", "scope_attestations"}
+    assert expected.issubset(table_names)
+
+
+def test_personas_has_composite_pk_tenant_persona() -> None:
+    """personas table PK is (tenant_id, persona_id) — one persona row per (tenant, persona)."""
+    table = metadata.tables["personas"]
+    pk_cols = [c.name for c in table.primary_key.columns]
+    assert pk_cols == ["tenant_id", "persona_id"]
+
+
+def test_tenants_has_pk_tenant_id() -> None:
+    table = metadata.tables["tenants"]
+    pk_cols = [c.name for c in table.primary_key.columns]
+    assert pk_cols == ["tenant_id"]
+
+
+def test_scope_attestations_has_pk_tenant_id() -> None:
+    """One attestation record per tenant (overwritten on re-attestation)."""
+    table = metadata.tables["scope_attestations"]
+    pk_cols = [c.name for c in table.primary_key.columns]
+    assert pk_cols == ["tenant_id"]
