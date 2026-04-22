@@ -5,7 +5,6 @@ We use Core (not ORM) because:
 - Hot retrieval path needs exact control over query shape (DIR-2.9)
 """
 from sqlalchemy import (
-    JSON,
     BigInteger,
     Boolean,
     Column,

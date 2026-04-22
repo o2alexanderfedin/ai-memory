@@ -1,7 +1,4 @@
 """Verify schema, RLS, and indexes (DIR-2.1, DIR-2.2, DIR-2.3, DIR-11.1)."""
-from sqlalchemy import text
-
-from synthius_mem.storage.db import get_engine
 from synthius_mem.storage.tables import metadata
 
 

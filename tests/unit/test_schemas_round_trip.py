@@ -1,5 +1,5 @@
 """Cross-domain round-trip + closed-schema check (DIR-1.1, DIR-1.3)."""
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import pytest
 from ulid import ULID
@@ -14,7 +14,7 @@ from synthius_mem.schemas.work import Work, WorkFields
 
 
 def _make_envelope(domain: str) -> CommonEnvelope:
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     return CommonEnvelope(
         persona_id=str(ULID()),
         domain=domain,

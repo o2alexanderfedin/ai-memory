@@ -1,5 +1,5 @@
 """Tests for the shared CommonEnvelope (DIR-1.3)."""
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import pytest
 from pydantic import ValidationError
@@ -9,7 +9,7 @@ from synthius_mem.schemas.envelope import CommonEnvelope, Provenance
 
 
 def _now() -> datetime:
-    return datetime.now(timezone.utc)
+    return datetime.now(UTC)
 
 
 def _envelope_kwargs() -> dict:

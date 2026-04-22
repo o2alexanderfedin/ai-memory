@@ -1,10 +1,10 @@
 """Shared types reused across domain schemas (DIR-1.6, DIR-1.8)."""
-from enum import Enum
+from enum import StrEnum
 
 from pydantic import BaseModel, ConfigDict, Field
 
 
-class DatePrecision(str, Enum):
+class DatePrecision(StrEnum):
     """ISO-8601 date precision marker (DIR-1.8)."""
 
     YEAR = "year"

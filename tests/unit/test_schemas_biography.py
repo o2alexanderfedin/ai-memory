@@ -1,5 +1,5 @@
 """Tests for Biography domain schema (DIR-1.1, DIR-1.8)."""
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 import pytest
@@ -19,11 +19,11 @@ def _envelope() -> CommonEnvelope:
         provenance=Provenance(
             source_message_id=str(ULID()),
             source_chunk_id=str(ULID()),
-            extracted_at=datetime.now(timezone.utc),
+            extracted_at=datetime.now(UTC),
             extractor_version="test",
         ),
-        created_at=datetime.now(timezone.utc),
-        updated_at=datetime.now(timezone.utc),
+        created_at=datetime.now(UTC),
+        updated_at=datetime.now(UTC),
     )
 
 
