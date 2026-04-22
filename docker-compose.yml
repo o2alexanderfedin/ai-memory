@@ -22,6 +22,7 @@ services:
       - "8000:8000"
     environment:
       DATABASE_URL: postgresql+psycopg://synthius:dev_only_password@postgres:5432/synthius_mem
+      APP_DATABASE_URL: postgresql+psycopg://synthius_app:dev_only_password@postgres:5432/synthius_mem
       JWT_SECRET: dev_only_secret_change_in_prod
       ZAI_API_KEY: ${ZAI_API_KEY:-}
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
