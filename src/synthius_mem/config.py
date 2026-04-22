@@ -20,6 +20,7 @@ class Settings(BaseSettings):  # type: ignore[explicit-any]
     jwt_secret: str = Field(default="dev_only_secret")
     zai_api_key: str = ""
     anthropic_api_key: str = ""
+    otel_exporter_otlp_endpoint: str = ""
 
 
 @lru_cache
