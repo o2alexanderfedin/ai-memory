@@ -160,3 +160,8 @@ def downgrade() -> None:
     op.drop_index('ix_biography_fields_gin', table_name='biography', postgresql_using='gin', postgresql_ops={'fields': 'jsonb_path_ops'})
     op.drop_table('biography')
     # ### end Alembic commands ###
+
+    # DIR-2.7 / Alembic-autogen quirk: SQLAlchemy Enum column does NOT auto-drop
+    # the named PG type on table drop. Explicit DROP TYPE keeps downgrade idempotent.
+    op.execute("DROP TYPE IF EXISTS wal_op;")
+
