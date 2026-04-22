@@ -136,6 +136,10 @@ def upgrade() -> None:
 
 def downgrade() -> None:
     """Downgrade schema."""
+    # DIR-2.2: drop functional B-tree indexes added in upgrade()
+    op.execute("DROP INDEX IF EXISTS ix_biography_fields_institution;")
+    op.execute("DROP INDEX IF EXISTS ix_work_fields_employer;")
+
     for table_name in ("biography", "experiences", "preferences",
                        "social_circle", "work", "psychometrics", "wal"):
         op.execute(f"DROP POLICY IF EXISTS tenant_isolation ON {table_name};")

@@ -33,6 +33,7 @@ dev = [
 [tool.ruff]
 line-length = 100
 target-version = "py312"
+extend-exclude = ["alembic/"]
 [tool.ruff.lint]
 select = ["E", "F", "I", "N", "UP", "B", "SIM", "PL", "RUF"]
 
@@ -41,6 +42,7 @@ python_version = "3.12"
 strict = true
 disallow_any_explicit = true
 disallow_any_generics = true
+exclude = ["alembic/"]
 
 [build-system]
 requires = ["hatchling"]
