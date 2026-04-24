@@ -6,7 +6,7 @@ from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 
 
-def setup_tracing(service_name: str = "synthius-mem", otlp_endpoint: str | None = None) -> None:
+def setup_tracing(service_name: str = "ai-hive-memory", otlp_endpoint: str | None = None) -> None:
     """Initialize OpenTelemetry tracer."""
     resource = Resource.create({SERVICE_NAME: service_name})
     provider = TracerProvider(resource=resource)

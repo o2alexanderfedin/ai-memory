@@ -1,7 +1,7 @@
 """Work domain schema (DIR-1.1, DIR-1.3)."""
 from pydantic import BaseModel, ConfigDict
 
-from synthius_mem.schemas.envelope import CommonEnvelope
+from ai_hive_memory.schemas.envelope import CommonEnvelope
 
 
 class WorkFields(BaseModel):  # type: ignore[explicit-any]

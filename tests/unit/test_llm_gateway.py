@@ -1,8 +1,8 @@
 """Unit tests for LLMGateway (mocked LiteLLM)."""
 from unittest.mock import MagicMock, patch
 
-from synthius_mem.llm.gateway import LLMGateway
-from synthius_mem.llm.models import ModelTier
+from ai_hive_memory.llm.gateway import LLMGateway
+from ai_hive_memory.llm.models import ModelTier
 
 
 def test_volume_tier_routes_to_glm_47_flashx() -> None:
@@ -25,7 +25,7 @@ def test_fallback_chain_includes_anthropic() -> None:
     assert "anthropic/claude-haiku-4-5-20251001" in gw.fallback_chain(ModelTier.VOLUME)
 
 
-@patch("synthius_mem.llm.gateway.litellm.completion")
+@patch("ai_hive_memory.llm.gateway.litellm.completion")
 def test_complete_calls_litellm_with_json_object_response_format(
     mock_completion: MagicMock,
 ) -> None:

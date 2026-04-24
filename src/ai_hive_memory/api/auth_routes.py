@@ -5,7 +5,7 @@ from uuid import uuid4
 from fastapi import APIRouter
 from pydantic import BaseModel
 
-from synthius_mem.auth.jwt import issue_token
+from ai_hive_memory.auth.jwt import issue_token
 
 router = APIRouter()
 

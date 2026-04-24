@@ -4,8 +4,8 @@ from typing import Annotated
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from synthius_mem.schemas.envelope import CommonEnvelope
-from synthius_mem.schemas.types import DatePrecision, DomainRef
+from ai_hive_memory.schemas.envelope import CommonEnvelope
+from ai_hive_memory.schemas.types import DatePrecision, DomainRef
 
 __all__ = ["Biography", "BiographyFields", "DatePrecision", "DomainRef", "EducationRecord"]
 

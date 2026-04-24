@@ -1,5 +1,5 @@
 [project]
-name = "synthius-mem"
+name = "ai-hive-memory"
 version = "0.0.1"
 description = "Per-persona structured memory service"
 requires-python = ">=3.12"
@@ -49,11 +49,14 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/synthius_mem"]
+packages = ["src/ai_hive_memory"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 asyncio_mode = "auto"
+# real_api tests cost real money and require a funded provider account.
+# Opt in explicitly with: pytest -m real_api
+addopts = "-m 'not real_api'"
 markers = [
-    "real_api: tests that hit a real LLM provider (skip without API key)",
+    "real_api: tests that hit a real LLM provider (opt-in via -m real_api; costs money)",
 ]

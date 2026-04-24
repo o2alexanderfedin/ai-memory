@@ -5,7 +5,7 @@ from uuid import UUID
 from jose import jwt  # type: ignore[import-untyped]
 from pydantic import BaseModel, ConfigDict, field_validator
 
-from synthius_mem.config import get_settings
+from ai_hive_memory.config import get_settings
 
 ALGORITHM = "HS256"
 

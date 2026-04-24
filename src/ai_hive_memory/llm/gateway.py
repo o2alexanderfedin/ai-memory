@@ -10,8 +10,8 @@ from typing import Any
 
 import litellm
 
-from synthius_mem.config import get_settings
-from synthius_mem.llm.models import ModelTier
+from ai_hive_memory.config import get_settings
+from ai_hive_memory.llm.models import ModelTier
 
 # Tier → primary model mapping (Decision 11)
 _TIER_MODELS: dict[ModelTier, str] = {

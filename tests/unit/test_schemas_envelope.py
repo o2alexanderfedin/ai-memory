@@ -5,7 +5,7 @@ import pytest
 from pydantic import ValidationError
 from ulid import ULID
 
-from synthius_mem.schemas.envelope import CommonEnvelope, Provenance
+from ai_hive_memory.schemas.envelope import CommonEnvelope, Provenance
 
 
 def _now() -> datetime:

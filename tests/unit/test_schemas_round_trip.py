@@ -4,13 +4,13 @@ from datetime import UTC, datetime
 import pytest
 from ulid import ULID
 
-from synthius_mem.schemas.biography import Biography, BiographyFields
-from synthius_mem.schemas.envelope import CommonEnvelope, Provenance
-from synthius_mem.schemas.experiences import Experiences, ExperiencesFields
-from synthius_mem.schemas.preferences import Preferences, PreferencesFields
-from synthius_mem.schemas.psychometrics import Psychometrics, PsychometricsFields
-from synthius_mem.schemas.social_circle import SocialCircle, SocialCircleFields
-from synthius_mem.schemas.work import Work, WorkFields
+from ai_hive_memory.schemas.biography import Biography, BiographyFields
+from ai_hive_memory.schemas.envelope import CommonEnvelope, Provenance
+from ai_hive_memory.schemas.experiences import Experiences, ExperiencesFields
+from ai_hive_memory.schemas.preferences import Preferences, PreferencesFields
+from ai_hive_memory.schemas.psychometrics import Psychometrics, PsychometricsFields
+from ai_hive_memory.schemas.social_circle import SocialCircle, SocialCircleFields
+from ai_hive_memory.schemas.work import Work, WorkFields
 
 
 def _make_envelope(domain: str) -> CommonEnvelope:

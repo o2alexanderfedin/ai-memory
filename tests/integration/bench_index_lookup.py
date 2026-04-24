@@ -5,7 +5,7 @@ from uuid import uuid4
 from sqlalchemy import text
 from ulid import ULID
 
-from synthius_mem.storage.db import get_engine
+from ai_hive_memory.storage.db import get_engine
 
 TENANT_ID = str(uuid4())
 PERSONA_ID = str(ULID())

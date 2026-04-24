@@ -3,8 +3,8 @@ from uuid import uuid4
 
 from sqlalchemy import text
 
-from synthius_mem.storage.db import get_engine
-from synthius_mem.storage.rls import tenant_scope
+from ai_hive_memory.storage.db import get_engine
+from ai_hive_memory.storage.rls import tenant_scope
 
 
 def test_tenant_scope_sets_and_resets() -> None:

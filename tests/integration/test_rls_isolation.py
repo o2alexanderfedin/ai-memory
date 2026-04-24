@@ -9,7 +9,7 @@ from sqlalchemy import text
 from sqlalchemy.engine import Connection
 from ulid import ULID
 
-from synthius_mem.storage.db import get_engine
+from ai_hive_memory.storage.db import get_engine
 
 
 def _seed_fact(conn: Connection, tenant_id: str, persona_id: str, fact_id: str) -> None:

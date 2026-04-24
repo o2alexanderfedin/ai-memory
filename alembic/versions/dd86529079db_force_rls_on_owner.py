@@ -1,6 +1,6 @@
 """Force RLS on table owners — required so service role doesn't bypass.
 
-Creates a dedicated synthius_app role (no superuser, no BYPASSRLS) for the
+Creates a dedicated ai_hive_app role (no superuser, no BYPASSRLS) for the
 application connection so RLS policies are genuinely enforced at runtime.
 FORCE ROW LEVEL SECURITY ensures even table owners cannot bypass policies.
 
@@ -46,29 +46,29 @@ def upgrade() -> None:
     # is genuinely enforced for all application queries.
     op.execute(
         "DO $$ BEGIN "
-        "  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'synthius_app') "
-        "  THEN CREATE ROLE synthius_app LOGIN PASSWORD 'dev_only_password' "
+        "  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'ai_hive_app') "
+        "  THEN CREATE ROLE ai_hive_app LOGIN PASSWORD 'dev_only_password' "
         "              NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT NOBYPASSRLS; "
         "  END IF; "
         "END $$;"
     )
     for t in _TABLES:
         op.execute(
-            f"GRANT SELECT, INSERT, UPDATE, DELETE ON {t} TO synthius_app;"
+            f"GRANT SELECT, INSERT, UPDATE, DELETE ON {t} TO ai_hive_app;"
         )
-    op.execute("GRANT USAGE ON SCHEMA public TO synthius_app;")
+    op.execute("GRANT USAGE ON SCHEMA public TO ai_hive_app;")
 
 
 def downgrade() -> None:
     op.execute(
         "DO $$ BEGIN "
-        "  IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'synthius_app') THEN "
+        "  IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'ai_hive_app') THEN "
         + " ".join(
-            f"REVOKE SELECT, INSERT, UPDATE, DELETE ON {t} FROM synthius_app; "
+            f"REVOKE SELECT, INSERT, UPDATE, DELETE ON {t} FROM ai_hive_app; "
             for t in _TABLES
         )
-        + "  REVOKE USAGE ON SCHEMA public FROM synthius_app; "
-        "  DROP ROLE synthius_app; "
+        + "  REVOKE USAGE ON SCHEMA public FROM ai_hive_app; "
+        "  DROP ROLE ai_hive_app; "
         "  END IF; "
         "END $$;"
     )

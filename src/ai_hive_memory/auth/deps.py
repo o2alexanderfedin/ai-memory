@@ -4,7 +4,7 @@ from typing import Annotated
 from fastapi import Depends, Header, HTTPException, status
 from jose import JWTError  # type: ignore[import-untyped]
 
-from synthius_mem.auth.jwt import TokenClaims, verify_token
+from ai_hive_memory.auth.jwt import TokenClaims, verify_token
 
 
 def require_auth(authorization: Annotated[str | None, Header()] = None) -> TokenClaims:

@@ -6,7 +6,7 @@ from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import SimpleSpanProcessor
 from opentelemetry.sdk.trace.export.in_memory_span_exporter import InMemorySpanExporter
 
-from synthius_mem.main import app
+from ai_hive_memory.main import app
 
 client = TestClient(app)
 
@@ -14,13 +14,36 @@ client = TestClient(app)
 def test_health_returns_ok() -> None:
     resp = client.get("/health")
     assert resp.status_code == status.HTTP_200_OK
-    assert resp.json() == {"status": "ok"}
+    body = resp.json()
+    assert body["status"] == "ok"
+    assert "timestamp" in body
+
+
+def test_health_timestamp_is_iso8601_utc() -> None:
+    from datetime import datetime, timezone
+
+    resp = client.get("/health")
+    ts = resp.json()["timestamp"]
+    parsed = datetime.fromisoformat(ts)
+    assert parsed.tzinfo is not None
+    # Must be UTC — offset zero.
+    assert parsed.utcoffset() == timezone.utc.utcoffset(parsed)
+
+
+def test_health_is_not_cached() -> None:
+    resp = client.get("/health")
+    cc = resp.headers.get("cache-control", "").lower()
+    assert "no-store" in cc
+    # Each call must produce a distinct timestamp (proves freshness, not caching).
+    ts1 = resp.json()["timestamp"]
+    ts2 = client.get("/health").json()["timestamp"]
+    assert ts1 != ts2
 
 
 def test_openapi_json_is_served() -> None:
     resp = client.get("/openapi.json")
     assert resp.status_code == status.HTTP_200_OK
-    assert resp.json()["info"]["title"] == "Synthius-Mem"
+    assert resp.json()["info"]["title"] == "AI Hive® Memory"
 
 
 def test_health_emits_otel_span() -> None:

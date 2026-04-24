@@ -9,8 +9,8 @@ import os
 import pytest
 from pydantic import BaseModel, ConfigDict
 
-from synthius_mem.llm.gateway import LLMGateway  # type: ignore[import-untyped]
-from synthius_mem.llm.models import ModelTier  # type: ignore[import-untyped]
+from ai_hive_memory.llm.gateway import LLMGateway  # type: ignore[import-untyped]
+from ai_hive_memory.llm.models import ModelTier  # type: ignore[import-untyped]
 
 
 class Person(BaseModel):  # type: ignore[explicit-any]

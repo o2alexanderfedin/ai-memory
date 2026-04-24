@@ -2,16 +2,17 @@
 from fastapi import FastAPI
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 
-from synthius_mem.api import auth_routes, health
-from synthius_mem.auth.deps import CurrentTenant
-from synthius_mem.config import get_settings
-from synthius_mem.observability.otel import setup_tracing
+from ai_hive_memory.api import auth_routes, health, index
+from ai_hive_memory.auth.deps import CurrentTenant
+from ai_hive_memory.config import get_settings
+from ai_hive_memory.observability.otel import setup_tracing
 
-app = FastAPI(title="Synthius-Mem", version="0.0.1")
+app = FastAPI(title="AI Hive® Memory", version="0.0.1")
 
 setup_tracing(otlp_endpoint=get_settings().otel_exporter_otlp_endpoint or None)
 FastAPIInstrumentor.instrument_app(app)
 
+app.include_router(index.router)
 app.include_router(health.router)
 app.include_router(auth_routes.router)
 

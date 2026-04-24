@@ -5,7 +5,7 @@ from uuid import uuid4
 import pytest
 from jose import JWTError
 
-from synthius_mem.auth.jwt import TokenClaims, issue_token, verify_token
+from ai_hive_memory.auth.jwt import TokenClaims, issue_token, verify_token
 
 
 def test_issue_and_verify_round_trip() -> None:

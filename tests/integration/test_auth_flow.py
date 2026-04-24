@@ -5,8 +5,8 @@ from uuid import uuid4
 from fastapi import status
 from fastapi.testclient import TestClient
 
-from synthius_mem.auth.jwt import issue_token
-from synthius_mem.main import app
+from ai_hive_memory.auth.jwt import issue_token
+from ai_hive_memory.main import app
 
 client = TestClient(app)
 

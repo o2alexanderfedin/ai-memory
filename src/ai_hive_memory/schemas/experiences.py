@@ -1,7 +1,7 @@
 """Experiences domain schema (DIR-1.1, DIR-1.2, DIR-1.3)."""
 from pydantic import BaseModel, ConfigDict, Field
 
-from synthius_mem.schemas.envelope import CommonEnvelope
+from ai_hive_memory.schemas.envelope import CommonEnvelope
 
 
 class ExperiencesFields(BaseModel):  # type: ignore[explicit-any]

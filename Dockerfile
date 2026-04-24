@@ -11,4 +11,4 @@ COPY alembic/ ./alembic/
 COPY alembic.ini ./
 
 EXPOSE 8000
-CMD ["uv", "run", "uvicorn", "synthius_mem.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uv", "run", "uvicorn", "ai_hive_memory.main:app", "--host", "0.0.0.0", "--port", "8000"]

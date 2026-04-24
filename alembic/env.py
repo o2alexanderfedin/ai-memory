@@ -3,8 +3,8 @@ from logging.config import fileConfig
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 
-from synthius_mem.config import get_settings
-from synthius_mem.storage.tables import metadata
+from ai_hive_memory.config import get_settings
+from ai_hive_memory.storage.tables import metadata
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

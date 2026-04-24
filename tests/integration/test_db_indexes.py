@@ -1,5 +1,5 @@
 """Verify schema, RLS, and indexes (DIR-2.1, DIR-2.2, DIR-2.3, DIR-11.1)."""
-from synthius_mem.storage.tables import metadata
+from ai_hive_memory.storage.tables import metadata
 
 
 def test_metadata_has_six_domain_tables_plus_wal(postgresql) -> None:

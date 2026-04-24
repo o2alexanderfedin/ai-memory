@@ -6,8 +6,8 @@ import pytest
 from pydantic import ValidationError
 from ulid import ULID
 
-from synthius_mem.schemas.biography import Biography, BiographyFields, DatePrecision
-from synthius_mem.schemas.envelope import CommonEnvelope, Provenance
+from ai_hive_memory.schemas.biography import Biography, BiographyFields, DatePrecision
+from ai_hive_memory.schemas.envelope import CommonEnvelope, Provenance
 
 
 def _envelope() -> CommonEnvelope:
