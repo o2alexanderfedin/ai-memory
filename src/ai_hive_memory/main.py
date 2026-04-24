@@ -2,7 +2,7 @@
 from fastapi import FastAPI
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 
-from ai_hive_memory.api import auth_routes, health, index
+from ai_hive_memory.api import auth_routes, health, index, signup_routes
 from ai_hive_memory.auth.deps import CurrentTenant
 from ai_hive_memory.config import get_settings
 from ai_hive_memory.observability.otel import setup_tracing
@@ -15,6 +15,7 @@ FastAPIInstrumentor.instrument_app(app)
 app.include_router(index.router)
 app.include_router(health.router)
 app.include_router(auth_routes.router)
+app.include_router(signup_routes.router)
 
 
 @app.get("/personas")
