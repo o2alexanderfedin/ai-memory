@@ -1,5 +1,5 @@
 """Health endpoint (DIR-7.2 op #8)."""
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
@@ -17,6 +17,6 @@ _NO_CACHE_HEADERS = {
 def health() -> JSONResponse:
     body = {
         "status": "ok",
-        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "timestamp": datetime.now(UTC).isoformat(),
     }
     return JSONResponse(content=body, headers=_NO_CACHE_HEADERS)

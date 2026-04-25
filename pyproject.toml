@@ -37,6 +37,9 @@ extend-exclude = ["alembic/"]
 [tool.ruff.lint]
 select = ["E", "F", "I", "N", "UP", "B", "SIM", "PL", "RUF"]
 
+[tool.ruff.lint.per-file-ignores]
+"src/ai_hive_memory/api/index.py" = ["E501"]  # embedded HTML/JS template — line length not meaningful
+
 [tool.mypy]
 python_version = "3.12"
 strict = true

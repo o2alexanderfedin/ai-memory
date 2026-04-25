@@ -1,4 +1,6 @@
 """Health endpoint + OTel trace span emission."""
+from datetime import UTC, datetime
+
 from fastapi import status
 from fastapi.testclient import TestClient
 from opentelemetry import trace
@@ -20,14 +22,12 @@ def test_health_returns_ok() -> None:
 
 
 def test_health_timestamp_is_iso8601_utc() -> None:
-    from datetime import datetime, timezone
-
     resp = client.get("/health")
     ts = resp.json()["timestamp"]
     parsed = datetime.fromisoformat(ts)
     assert parsed.tzinfo is not None
     # Must be UTC — offset zero.
-    assert parsed.utcoffset() == timezone.utc.utcoffset(parsed)
+    assert parsed.utcoffset() == UTC.utcoffset(parsed)
 
 
 def test_health_is_not_cached() -> None:
