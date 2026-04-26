@@ -14,6 +14,7 @@ status=DONE (or FAILED) plus per-domain extraction counts in domain_status.
 """
 import hashlib
 
+from pydantic import BaseModel as PydanticModel
 from sqlalchemy.engine import Connection
 
 from ai_hive_memory.ingest.adapters import AdapterRouter
@@ -44,7 +45,7 @@ DOMAINS = ("biography", "experiences", "preferences",
            "social_circle", "work", "psychometrics")
 
 
-def _default_router(gateway: LLMGateway) -> AdapterRouter:  # noqa: ARG001
+def _default_router(_gateway: LLMGateway) -> AdapterRouter:
     r = AdapterRouter()
     r.register("whatsapp", WhatsAppAdapter())
     r.register("telegram", TelegramAdapter())
@@ -76,18 +77,15 @@ def _fact_has_content(fact: object) -> bool:
     Facts built from an empty LLM response ({}) have all-None fields and should
     not be persisted — they carry no information.
     """
-    from pydantic import BaseModel as _BM  # local import avoids circularity
-    if not isinstance(fact, _BM):
+    if not isinstance(fact, PydanticModel):
         return True  # unknown type — accept conservatively
     fields_obj = getattr(fact, "fields", None)
     if fields_obj is None:
         return False
-    if not isinstance(fields_obj, _BM):
+    if not isinstance(fields_obj, PydanticModel):
         return True
-    for v in fields_obj.model_dump().values():
-        if v is not None and v != [] and v != {}:
-            return True
-    return False
+    empty_sentinels: tuple[None | list[object] | dict[object, object], ...] = (None, [], {})
+    return any(v not in empty_sentinels for v in fields_obj.model_dump().values())
 
 
 class IngestPipeline:
@@ -109,8 +107,9 @@ class IngestPipeline:
         self._job_repo = IngestJobRepository()
         self._pf_repo = PendingFactRepository()
 
-    async def run(self, *, conn: Connection, tenant_id: str, persona_id: str,
-                  job_id: str, fmt: str, raw: bytes) -> None:
+    async def run(  # noqa: PLR0913
+            self, *, conn: Connection, tenant_id: str, persona_id: str,
+            job_id: str, fmt: str, raw: bytes) -> None:
         try:
             self._job_repo.update_status(conn, tenant_id, job_id, status="RUNNING")
             messages: list[Message] = self._router.parse(fmt, raw)
@@ -140,7 +139,7 @@ class IngestPipeline:
                             )
                         succeeded.append(domain)
                         domain_status[domain] = "DONE"
-                    except Exception as e:  # noqa: BLE001
+                    except Exception as e:
                         domain_status[domain] = f"FAILED: {e}"
                 # 5/6 partial accept gate per chunk
                 self._policy.assert_partial_accept(
@@ -152,7 +151,7 @@ class IngestPipeline:
                 conn, tenant_id, job_id, status="DONE",
                 domain_status=domain_status,
             )
-        except Exception as e:  # noqa: BLE001
+        except Exception as e:
             self._job_repo.update_status(
                 conn, tenant_id, job_id, status="FAILED",
                 error=str(e),

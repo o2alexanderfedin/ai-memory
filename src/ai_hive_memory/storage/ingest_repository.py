@@ -23,9 +23,10 @@ class IngestJobRepository:
         )
         return job_id
 
-    def update_status(self, conn: Connection, tenant_id: str, job_id: str, *,
-                      status: str, domain_status: dict[str, str] | None = None,
-                      error: str | None = None) -> None:
+    def update_status(  # noqa: PLR0913
+            self, conn: Connection, tenant_id: str, job_id: str, *,
+            status: str, domain_status: dict[str, str] | None = None,
+            error: str | None = None) -> None:
         conn.execute(
             text("""
                 UPDATE ingest_jobs
@@ -58,9 +59,10 @@ class IngestJobRepository:
 class PendingFactRepository:
     """CRUD for the pending_facts table."""
 
-    def persist(self, conn: Connection, tenant_id: str, persona_id: str,
-                job_id: str, *, domain: str, fact: BaseModel,
-                source_hash: str) -> str:
+    def persist(  # noqa: PLR0913
+            self, conn: Connection, tenant_id: str, persona_id: str,
+            job_id: str, *, domain: str, fact: BaseModel,
+            source_hash: str) -> str:
         pending_fact_id = str(uuid4())
         conn.execute(
             text("""
@@ -78,8 +80,9 @@ class PendingFactRepository:
         )
         return pending_fact_id
 
-    def list_for_job(self, conn: Connection, tenant_id: str,
-                     job_id: str) -> list[dict[str, Any]]:  # type: ignore[explicit-any]
+    def list_for_job(  # type: ignore[explicit-any]
+            self, conn: Connection, tenant_id: str,
+            job_id: str) -> list[dict[str, Any]]:
         rows = conn.execute(
             text("""
                 SELECT pending_fact_id::text, domain, payload, source_hash

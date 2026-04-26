@@ -2,7 +2,15 @@
 from fastapi import FastAPI
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 
-from ai_hive_memory.api import auth_routes, conversations, health, index, jobs, personas, signup_routes
+from ai_hive_memory.api import (
+    auth_routes,
+    conversations,
+    health,
+    index,
+    jobs,
+    personas,
+    signup_routes,
+)
 from ai_hive_memory.config import get_settings
 from ai_hive_memory.observability.otel import setup_tracing
 
