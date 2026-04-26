@@ -2,14 +2,14 @@
 from ai_hive_memory.storage.tables import metadata
 
 
-def test_metadata_has_six_domain_tables_plus_wal(postgresql) -> None:
+def test_metadata_has_six_domain_tables_plus_wal() -> None:
     table_names = {t.name for t in metadata.sorted_tables}
     expected = {"biography", "experiences", "preferences",
                 "social_circle", "work", "psychometrics", "wal"}
     assert expected.issubset(table_names)
 
 
-def test_six_domain_tables_have_composite_pk(postgresql) -> None:
+def test_six_domain_tables_have_composite_pk() -> None:
     """DIR-2.1: composite PK (tenant_id, persona_id, fact_id)."""
     for table_name in ["biography", "experiences", "preferences",
                        "social_circle", "work", "psychometrics"]:
@@ -24,7 +24,7 @@ def test_each_domain_has_gin_and_btree_indexes() -> None:
     """DIR-2.2: GIN(fields jsonb_path_ops) + functional B-tree on hot sub-fields."""
     for table_name in ["biography", "work"]:  # spot-check 2 representative
         table = metadata.tables[table_name]
-        idx_names = {idx.name for idx in table.indexes}
+        idx_names = {idx.name for idx in table.indexes if idx.name is not None}
         assert any("gin" in n for n in idx_names), f"{table_name} missing GIN index"
 
 
