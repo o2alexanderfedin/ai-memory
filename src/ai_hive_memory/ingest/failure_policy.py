@@ -80,7 +80,8 @@ class ExtractionFailurePolicy:
     ) -> None:
         """Raise PartialAcceptError if fewer than MIN_PARTIAL_ACCEPT_DOMAINS succeeded."""
         if len(succeeded_domains) < MIN_PARTIAL_ACCEPT_DOMAINS:
+            missing = sorted(set(all_domains) - set(succeeded_domains))
             raise PartialAcceptError(
-                f"Only {len(succeeded_domains)} domain(s) succeeded; "
-                f"need at least {MIN_PARTIAL_ACCEPT_DOMAINS}."
+                f"only {len(succeeded_domains)}/{len(all_domains)} domains succeeded; "
+                f"missing: {missing}"
             )
