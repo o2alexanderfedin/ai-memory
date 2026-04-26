@@ -116,3 +116,45 @@ scope_attestations = Table(
     Column("source_country", String(2), nullable=True),  # ISO-3166 alpha-2 (or null)
     PrimaryKeyConstraint("tenant_id", name="pk_scope_attestations"),
 )
+
+
+# Ingest jobs — one row per POST /personas/{id}/conversations call
+ingest_jobs = Table(
+    "ingest_jobs",
+    metadata,
+    Column("tenant_id", UUID(as_uuid=False), nullable=False),
+    Column("job_id", UUID(as_uuid=False), nullable=False),
+    Column("persona_id", String(26), nullable=False),
+    Column("format", String, nullable=False),  # 'whatsapp'|'telegram'|'pdf'|'email'|'voice'
+    Column("status", Enum("PENDING", "RUNNING", "DONE", "FAILED",
+                          name="ingest_job_status"), nullable=False,
+           server_default="PENDING"),
+    Column("domain_status", JSONB, nullable=False,
+           server_default=text("'{}'::jsonb")),  # {biography: "DONE", ...}
+    Column("error", String, nullable=True),
+    Column("created_at", DateTime(timezone=True),
+           server_default=text("now()"), nullable=False),
+    Column("updated_at", DateTime(timezone=True),
+           server_default=text("now()"), nullable=False),
+    PrimaryKeyConstraint("tenant_id", "job_id", name="pk_ingest_jobs"),
+)
+
+
+# Pending facts — extractor outputs awaiting consolidation (S-4)
+pending_facts = Table(
+    "pending_facts",
+    metadata,
+    Column("tenant_id", UUID(as_uuid=False), nullable=False),
+    Column("persona_id", String(26), nullable=False),
+    Column("pending_fact_id", UUID(as_uuid=False), nullable=False),
+    Column("job_id", UUID(as_uuid=False), nullable=False),
+    Column("domain", String, nullable=False),  # one of DOMAINS
+    Column("payload", JSONB, nullable=False),  # full FactItem (envelope+fields)
+    Column("source_hash", String(64), nullable=False),  # SHA-256 of canonical message
+    Column("created_at", DateTime(timezone=True),
+           server_default=text("now()"), nullable=False),
+    PrimaryKeyConstraint("tenant_id", "persona_id", "pending_fact_id",
+                         name="pk_pending_facts"),
+    Index("ix_pending_facts_job", "tenant_id", "job_id"),
+    Index("ix_pending_facts_source_hash", "tenant_id", "persona_id", "source_hash"),
+)

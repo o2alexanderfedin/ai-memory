@@ -1,0 +1,6 @@
+# Each subdirectory here is a 3rd-party clone with its own git history.
+# Don't track them — track only the curation docs at this directory's root.
+*/
+
+# Re-include directories that hold project-owned notes (not external code).
+!notes/
