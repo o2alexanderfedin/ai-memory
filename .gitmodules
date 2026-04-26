@@ -1,0 +1,15 @@
+[submodule "3rd-party/karpathy-llm-wiki"]
+	path = 3rd-party/karpathy-llm-wiki
+	url = https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f.git
+[submodule "3rd-party/memsearch"]
+	path = 3rd-party/memsearch
+	url = https://github.com/zilliztech/memsearch.git
+[submodule "3rd-party/mempalace"]
+	path = 3rd-party/mempalace
+	url = https://github.com/MemPalace/mempalace.git
+[submodule "3rd-party/openbrain"]
+	path = 3rd-party/openbrain
+	url = https://github.com/NateBJones-Projects/OB1.git
+[submodule "3rd-party/mem0"]
+	path = 3rd-party/mem0
+	url = https://github.com/mem0ai/mem0.git
