@@ -6,9 +6,9 @@ from ai_hive_memory.ingest.adapters.whatsapp import WhatsAppAdapter
 
 def test_parse_two_line_export() -> None:
     raw = (
-        "[2026-04-21 12:00] Alice: Hi Bob!\n"
-        "[2026-04-21 12:01] Bob: Hey Alice, how are you?\n"
-    ).encode()
+        b"[2026-04-21 12:00] Alice: Hi Bob!\n"
+        b"[2026-04-21 12:01] Bob: Hey Alice, how are you?\n"
+    )
     msgs = WhatsAppAdapter().parse(raw)
     assert len(msgs) == 2  # noqa: PLR2004
     assert msgs[0].speaker == "Alice"
@@ -19,10 +19,10 @@ def test_parse_two_line_export() -> None:
 
 def test_parse_continuation_lines_attach_to_prior_message() -> None:
     raw = (
-        "[2026-04-21 12:00] Alice: Line 1\n"
-        "still part of Alice's message\n"
-        "[2026-04-21 12:01] Bob: ok\n"
-    ).encode()
+        b"[2026-04-21 12:00] Alice: Line 1\n"
+        b"still part of Alice's message\n"
+        b"[2026-04-21 12:01] Bob: ok\n"
+    )
     msgs = WhatsAppAdapter().parse(raw)
     assert len(msgs) == 2  # noqa: PLR2004
     assert msgs[0].text == "Line 1\nstill part of Alice's message"
