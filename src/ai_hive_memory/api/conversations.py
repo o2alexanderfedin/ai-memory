@@ -70,9 +70,18 @@ def create_conversation(
     if row is None:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "persona not found")
 
-    job_id = IngestJobRepository().create_job(
-        conn, claims.tenant_id, persona_id, fmt=req.format,
-    )
+    # Create the job in its OWN committed transaction so the background task
+    # can read it immediately (background tasks run before the request-scoped
+    # connection commits under Starlette's AnyIO transport).
+    job_gen = request_scoped_conn(claims.tenant_id)
+    job_conn = next(job_gen)
+    try:
+        job_id = IngestJobRepository().create_job(
+            job_conn, claims.tenant_id, persona_id, fmt=req.format,
+        )
+    finally:
+        job_gen.close()  # commits the INSERT immediately
+
     raw = req.content.encode("utf-8")
     background.add_task(
         _drive_pipeline, claims.tenant_id, persona_id, job_id, req.format, raw,
