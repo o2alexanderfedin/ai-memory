@@ -1,10 +1,10 @@
 """LOAD-BEARING: tenant_a cannot read tenant_b's ingest_jobs or pending_facts (DIR-11.1)."""
 import json
-import time
 from unittest.mock import patch
 
 from fastapi import status
 from fastapi.testclient import TestClient
+from job_completion import WaitDone
 
 from ai_hive_memory.main import app
 
@@ -27,17 +27,10 @@ def _persona(token: str) -> str:
                        headers={"Authorization": f"Bearer {token}"}).json()["persona_id"]
 
 
-def _wait_done(token: str, job_id: str) -> None:
-    for _ in range(40):
-        body = client.get(f"/jobs/{job_id}",
-                          headers={"Authorization": f"Bearer {token}"}).json()
-        if body.get("status") in {"DONE", "FAILED"}:
-            return
-        time.sleep(0.05)
-
-
 @patch("ai_hive_memory.api.conversations.LLMGateway")
-def test_tenant_a_cannot_read_tenant_b_jobs_via_api(mock_gw_cls: object) -> None:
+def test_tenant_a_cannot_read_tenant_b_jobs_via_api(
+    mock_gw_cls: object, wait_done: WaitDone,
+) -> None:
     mock_gw_cls.return_value.complete.return_value = json.dumps({})  # type: ignore[union-attr]
 
     token_a = _signup()
@@ -51,7 +44,7 @@ def test_tenant_a_cannot_read_tenant_b_jobs_via_api(mock_gw_cls: object) -> None
         json={"format": "whatsapp", "content": "[2026-04-21 12:00] B: hi\n"},
     )
     job_b = r.json()["job_id"]
-    _wait_done(token_b, job_b)
+    wait_done(client, token_b, job_b)
 
     # tenant_a tries to read tenant_b's job — must be 404
     resp_a = client.get(f"/jobs/{job_b}",

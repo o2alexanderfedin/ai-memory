@@ -1,10 +1,10 @@
 """GET /jobs/{id} — job status polling (US-2.8)."""
 import json
-import time
 from unittest.mock import patch
 
 from fastapi import status
 from fastapi.testclient import TestClient
+from job_completion import WaitDone
 
 from ai_hive_memory.main import app
 
@@ -27,7 +27,9 @@ def _create_persona(client: TestClient, token: str) -> str:
 
 
 @patch("ai_hive_memory.api.conversations.LLMGateway")
-def test_get_job_returns_status_and_per_domain_progress(mock_gw_cls: object) -> None:
+def test_get_job_returns_status_and_per_domain_progress(
+    mock_gw_cls: object, wait_done: WaitDone,
+) -> None:
     instance = mock_gw_cls.return_value  # type: ignore[union-attr]
     instance.complete.return_value = json.dumps({})
     with TestClient(app) as client:
@@ -39,16 +41,11 @@ def test_get_job_returns_status_and_per_domain_progress(mock_gw_cls: object) -> 
             json={"format": "whatsapp", "content": "[2026-04-21 12:00] Alice: hi\n"},
         )
         job_id = resp.json()["job_id"]
-        # Poll for completion — BackgroundTasks runs inline with context-manager TestClient.
-        body: dict[str, object] = {}
-        for _ in range(20):
-            get_resp = client.get(f"/jobs/{job_id}",
-                                  headers={"Authorization": f"Bearer {token}"})
-            assert get_resp.status_code == status.HTTP_200_OK
-            body = get_resp.json()
-            if body["status"] in {"DONE", "FAILED"}:
-                break
-            time.sleep(0.05)
+        wait_done(client, token, job_id)
+        get_resp = client.get(f"/jobs/{job_id}",
+                              headers={"Authorization": f"Bearer {token}"})
+        assert get_resp.status_code == status.HTTP_200_OK
+        body = get_resp.json()
         assert body["status"] == "DONE"
         assert "domain_status" in body
         assert set(body["domain_status"].keys()) == {

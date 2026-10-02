@@ -1,9 +1,9 @@
 """US-2.4 + Decision 12: SSN + credit-card patterns are redacted before extractor sees text."""
 import json
-import time
 from unittest.mock import patch
 
 from fastapi.testclient import TestClient
+from job_completion import WaitDone
 
 from ai_hive_memory.main import app
 
@@ -26,19 +26,9 @@ def _persona(token: str) -> str:
                        headers={"Authorization": f"Bearer {token}"}).json()["persona_id"]
 
 
-def _wait_done(token: str, job_id: str) -> None:
-    for _ in range(40):
-        body = client.get(f"/jobs/{job_id}",
-                          headers={"Authorization": f"Bearer {token}"}).json()
-        if body["status"] in {"DONE", "FAILED"}:
-            return
-        time.sleep(0.05)
-    raise AssertionError("job did not finish")
-
-
 @patch("ai_hive_memory.api.conversations.LLMGateway")
 def test_ssn_and_cc_are_redacted_before_extractor_sees_text(
-    mock_gw_cls: object,
+    mock_gw_cls: object, wait_done: WaitDone,
 ) -> None:
     seen_user_messages: list[str] = []
 
@@ -61,7 +51,7 @@ def test_ssn_and_cc_are_redacted_before_extractor_sees_text(
         json={"format": "whatsapp", "content": content},
     )
     job_id = r.json()["job_id"]
-    _wait_done(token, job_id)
+    wait_done(client, token, job_id)
 
     combined = "\n".join(seen_user_messages)
     assert "[REDACTED-SSN]" in combined

@@ -1,10 +1,10 @@
 """US-2.3: re-uploading the same conversation yields 0 new pending_facts."""
 import json
-import time
 from unittest.mock import MagicMock, patch
 
 from fastapi import status
 from fastapi.testclient import TestClient
+from job_completion import WaitDone
 
 from ai_hive_memory.auth.jwt import verify_token
 from ai_hive_memory.main import app
@@ -34,25 +34,13 @@ def _persona(token: str) -> str:
     ).json()["persona_id"]
 
 
-def _wait_done(token: str, job_id: str) -> None:
-    for _ in range(40):
-        body = client.get(
-            f"/jobs/{job_id}",
-            headers={"Authorization": f"Bearer {token}"},
-        ).json()
-        if body["status"] in {"DONE", "FAILED"}:
-            return
-        time.sleep(0.05)
-    raise AssertionError(f"job {job_id} did not finish")
-
-
 def _tenant_from_token(token: str) -> str:
     return verify_token(token).tenant_id
 
 
 @patch("ai_hive_memory.api.conversations.LLMGateway")
 def test_re_upload_same_whatsapp_yields_zero_new_pending_facts(
-    mock_gw_cls: object,
+    mock_gw_cls: object, wait_done: WaitDone,
 ) -> None:
     """First upload produces facts; second (identical) upload produces zero."""
     payloads_by_systemkey: dict[str, dict[str, object]] = {
@@ -87,7 +75,7 @@ def test_re_upload_same_whatsapp_yields_zero_new_pending_facts(
     )
     assert r1.status_code == status.HTTP_202_ACCEPTED
     job1 = r1.json()["job_id"]
-    _wait_done(token, job1)
+    wait_done(client, token, job1)
 
     # Second upload — identical content
     r2 = client.post(
@@ -96,7 +84,7 @@ def test_re_upload_same_whatsapp_yields_zero_new_pending_facts(
         json={"format": "whatsapp", "content": raw_content},
     )
     job2 = r2.json()["job_id"]
-    _wait_done(token, job2)
+    wait_done(client, token, job2)
 
     # Verify counts via DB
     tenant_id = _tenant_from_token(token)
@@ -114,7 +102,7 @@ def test_re_upload_same_whatsapp_yields_zero_new_pending_facts(
 
 @patch("ai_hive_memory.api.conversations.LLMGateway")
 def test_re_upload_multi_message_whatsapp_yields_zero_new_pending_facts(
-    mock_gw_cls: MagicMock,
+    mock_gw_cls: MagicMock, wait_done: WaitDone,
 ) -> None:
     """Every message of a re-uploaded conversation is recognised, not just the first.
 
@@ -147,7 +135,7 @@ def test_re_upload_multi_message_whatsapp_yields_zero_new_pending_facts(
         )
         assert r.status_code == status.HTTP_202_ACCEPTED
         job_ids.append(r.json()["job_id"])
-        _wait_done(token, job_ids[-1])
+        wait_done(client, token, job_ids[-1])
 
     tenant_id = _tenant_from_token(token)
     pf_repo = PendingFactRepository()
