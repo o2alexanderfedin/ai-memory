@@ -160,15 +160,17 @@ pending_facts = Table(
 )
 
 
-# Ingested messages — SHA-256 of every message an ingest job processed (DIR-3.1)
+# Ingested messages — SHA-256 of every message each extraction domain processed (DIR-3.1)
 ingested_messages = Table(
     "ingested_messages",
     metadata,
     Column("tenant_id", UUID(as_uuid=False), nullable=False),
     Column("persona_id", String(26), nullable=False),
     Column("message_hash", String(64), nullable=False),  # SHA-256 of canonical message
+    # Extraction domain that processed the message; '*' (older rows) = every domain
+    Column("domain", String, nullable=False),
     Column("created_at", DateTime(timezone=True),
            server_default=text("now()"), nullable=False),
-    PrimaryKeyConstraint("tenant_id", "persona_id", "message_hash",
+    PrimaryKeyConstraint("tenant_id", "persona_id", "message_hash", "domain",
                          name="pk_ingested_messages"),
 )

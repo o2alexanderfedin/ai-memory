@@ -30,15 +30,15 @@ def test_tenant_a_cannot_read_tenant_b_ingested_messages() -> None:
     tenant_a, tenant_b = str(uuid4()), str(uuid4())
     repo = PendingFactRepository()
     with get_engine().begin() as conn, tenant_scope(conn, tenant_b):
-        repo.mark_seen(conn, tenant_b, PERSONA, ["b" * 64])
+        repo.mark_seen(conn, tenant_b, PERSONA, ["b" * 64], ["biography"])
 
     # Sanity: tenant_b sees its own row.
     assert _count_rows(tenant_b, tenant_b) == 1
 
     assert _count_rows(tenant_a, tenant_b) == 0, "RLS BREACH: tenant_a saw tenant_b's rows"
     with get_engine().begin() as conn, tenant_scope(conn, tenant_a):
-        seen = repo.seen_hashes_for_persona(conn, tenant_b, PERSONA)
-    assert seen == set(), f"RLS BREACH: tenant_a saw tenant_b's hashes {seen}"
+        seen = repo.seen_domains_for_persona(conn, tenant_b, PERSONA)
+    assert seen == {}, f"RLS BREACH: tenant_a saw tenant_b's hashes {seen}"
 
 
 def test_tenant_a_cannot_insert_into_tenant_b_ingested_messages() -> None:
@@ -50,7 +50,7 @@ def test_tenant_a_cannot_insert_into_tenant_b_ingested_messages() -> None:
         pytest.raises(DBAPIError, match="row-level security"),
         conn.begin_nested(),
     ):
-        repo.mark_seen(conn, tenant_b, PERSONA, ["a" * 64])
+        repo.mark_seen(conn, tenant_b, PERSONA, ["a" * 64], ["biography"])
 
     assert _count_rows(tenant_b, tenant_b) == 0, (
         "RLS BREACH: tenant_a wrote a row into tenant_b's ingested_messages"
