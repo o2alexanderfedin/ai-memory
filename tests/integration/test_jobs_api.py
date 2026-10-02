@@ -68,3 +68,16 @@ def test_get_job_unauthenticated_returns_401() -> None:
     with TestClient(app) as client:
         resp = client.get("/jobs/any-id")
         assert resp.status_code == status.HTTP_401_UNAUTHORIZED
+
+
+def test_get_job_with_malformed_id_returns_404() -> None:
+    """A job id that is not a UUID names no job: 404, like any unknown job id."""
+    with TestClient(app, raise_server_exceptions=False) as client:
+        token = _signup(client)
+        resp = client.get(
+            "/jobs/not-a-uuid",
+            headers={"Authorization": f"Bearer {token}"},
+        )
+        assert resp.status_code == status.HTTP_404_NOT_FOUND, (
+            f"GET /jobs/not-a-uuid answered {resp.status_code}: {resp.text}"
+        )
