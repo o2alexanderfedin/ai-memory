@@ -16,6 +16,7 @@ status=DONE (or FAILED) plus per-domain extraction counts in domain_status.
 """
 import asyncio
 import hashlib
+from contextlib import suppress
 
 from pydantic import BaseModel as PydanticModel
 from sqlalchemy.engine import Connection
@@ -161,13 +162,17 @@ class IngestPipeline:
                 succeeded: list[str] = []
                 for domain, facts in results.items():
                     try:
-                        for fact in facts:
-                            if not _fact_has_content(fact):
-                                continue
-                            self._pf_repo.persist(
-                                conn, tenant_id, persona_id, job_id,
-                                domain=domain, fact=fact, source_hash=source_hash,
-                            )
+                        # A savepoint per domain: a database error here undoes
+                        # only this domain's rows and leaves the transaction
+                        # usable, so the other domains can still be kept.
+                        with conn.begin_nested():
+                            for fact in facts:
+                                if not _fact_has_content(fact):
+                                    continue
+                                self._pf_repo.persist(
+                                    conn, tenant_id, persona_id, job_id,
+                                    domain=domain, fact=fact, source_hash=source_hash,
+                                )
                         succeeded.append(domain)
                         domain_status[domain] = "DONE"
                     except Exception as e:
@@ -187,8 +192,12 @@ class IngestPipeline:
                 domain_status=domain_status,
             )
         except Exception as e:
-            self._job_repo.update_status(
-                conn, tenant_id, job_id, status="FAILED",
-                error=str(e),
-            )
+            # After a database error the transaction is aborted and this update
+            # fails too. Keep the original error; the caller then marks the
+            # job FAILED in a new transaction.
+            with suppress(Exception):
+                self._job_repo.update_status(
+                    conn, tenant_id, job_id, status="FAILED",
+                    error=str(e),
+                )
             raise
