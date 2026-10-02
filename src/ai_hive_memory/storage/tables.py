@@ -158,3 +158,17 @@ pending_facts = Table(
     Index("ix_pending_facts_job", "tenant_id", "job_id"),
     Index("ix_pending_facts_source_hash", "tenant_id", "persona_id", "source_hash"),
 )
+
+
+# Ingested messages — SHA-256 of every message an ingest job processed (DIR-3.1)
+ingested_messages = Table(
+    "ingested_messages",
+    metadata,
+    Column("tenant_id", UUID(as_uuid=False), nullable=False),
+    Column("persona_id", String(26), nullable=False),
+    Column("message_hash", String(64), nullable=False),  # SHA-256 of canonical message
+    Column("created_at", DateTime(timezone=True),
+           server_default=text("now()"), nullable=False),
+    PrimaryKeyConstraint("tenant_id", "persona_id", "message_hash",
+                         name="pk_ingested_messages"),
+)

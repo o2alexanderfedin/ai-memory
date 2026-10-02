@@ -1,7 +1,7 @@
 """US-2.3: re-uploading the same conversation yields 0 new pending_facts."""
 import json
 import time
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 from fastapi import status
 from fastapi.testclient import TestClient
@@ -106,6 +106,56 @@ def test_re_upload_same_whatsapp_yields_zero_new_pending_facts(
     try:
         n1 = len(pf_repo.list_for_job(conn, tenant_id, job1))
         n2 = len(pf_repo.list_for_job(conn, tenant_id, job2))
+        assert n1 > 0, "first upload must have produced facts"
+        assert n2 == 0, f"second (duplicate) upload produced {n2} facts; expected 0"
+    finally:
+        gen.close()
+
+
+@patch("ai_hive_memory.api.conversations.LLMGateway")
+def test_re_upload_multi_message_whatsapp_yields_zero_new_pending_facts(
+    mock_gw_cls: MagicMock,
+) -> None:
+    """Every message of a re-uploaded conversation is recognised, not just the first.
+
+    Both messages land in one chunk. If only the chunk's first message is
+    remembered as seen, the second upload re-extracts the second message and
+    persists duplicate facts.
+    """
+    def _complete(*, tier: object, messages: list[dict[str, str]],
+                  json_mode: bool, temperature: float = 0.0,
+                  max_tokens: int = 2048) -> str:
+        if "biographical" in messages[0]["content"].lower():
+            return json.dumps({"birth_date_precision": "year"})
+        return json.dumps({})
+
+    mock_gw_cls.return_value.complete.side_effect = _complete
+
+    token = _signup()
+    persona_id = _persona(token)
+    raw_content = (
+        "[2026-04-21 12:00] Alice: I was born in 1990.\n"
+        "[2026-04-21 12:01] Alice: I grew up in Lisbon.\n"
+    )
+
+    job_ids: list[str] = []
+    for _ in range(2):
+        r = client.post(
+            f"/personas/{persona_id}/conversations",
+            headers={"Authorization": f"Bearer {token}"},
+            json={"format": "whatsapp", "content": raw_content},
+        )
+        assert r.status_code == status.HTTP_202_ACCEPTED
+        job_ids.append(r.json()["job_id"])
+        _wait_done(token, job_ids[-1])
+
+    tenant_id = _tenant_from_token(token)
+    pf_repo = PendingFactRepository()
+    gen = request_scoped_conn(tenant_id)
+    conn = next(gen)
+    try:
+        n1 = len(pf_repo.list_for_job(conn, tenant_id, job_ids[0]))
+        n2 = len(pf_repo.list_for_job(conn, tenant_id, job_ids[1]))
         assert n1 > 0, "first upload must have produced facts"
         assert n2 == 0, f"second (duplicate) upload produced {n2} facts; expected 0"
     finally:

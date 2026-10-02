@@ -96,11 +96,30 @@ class PendingFactRepository:
 
     def seen_hashes_for_persona(self, conn: Connection, tenant_id: str,
                                 persona_id: str) -> set[str]:
+        # pending_facts.source_hash still counts: rows written before
+        # ingested_messages existed are the only record of those messages.
         rows = conn.execute(
             text("""
-                SELECT DISTINCT source_hash FROM pending_facts
+                SELECT message_hash FROM ingested_messages
+                WHERE tenant_id = :tid AND persona_id = :pid
+                UNION
+                SELECT source_hash FROM pending_facts
                 WHERE tenant_id = :tid AND persona_id = :pid
             """),
             {"tid": tenant_id, "pid": persona_id},
         ).fetchall()
         return {r[0] for r in rows}
+
+    def mark_seen(self, conn: Connection, tenant_id: str, persona_id: str,
+                  message_hashes: list[str]) -> None:
+        """Record every processed message so a re-upload skips all of them."""
+        if not message_hashes:
+            return
+        conn.execute(
+            text("""
+                INSERT INTO ingested_messages (tenant_id, persona_id, message_hash)
+                VALUES (:tid, :pid, :hash)
+                ON CONFLICT DO NOTHING
+            """),
+            [{"tid": tenant_id, "pid": persona_id, "hash": h} for h in message_hashes],
+        )
