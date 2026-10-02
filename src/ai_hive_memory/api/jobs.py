@@ -1,6 +1,7 @@
 """GET /jobs/{job_id} — async job status polling (US-2.8)."""
 from collections.abc import Generator
 from typing import Annotated
+from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel, ConfigDict
@@ -33,6 +34,12 @@ def get_job(
     claims: CurrentTenant,
     conn: Annotated[Connection, Depends(_conn_for)],
 ) -> JobStatusResponse:
+    # Job ids are UUIDs; any other string names no job. Without this check
+    # Postgres rejects the cast and the client gets a 500.
+    try:
+        UUID(job_id)
+    except ValueError:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "job not found") from None
     row = IngestJobRepository().get_job(conn, claims.tenant_id, job_id)
     if row is None:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "job not found")
