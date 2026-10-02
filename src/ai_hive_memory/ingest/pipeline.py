@@ -146,6 +146,10 @@ class IngestPipeline:
                     succeeded_domains=succeeded,
                     all_domains=list(DOMAINS),
                 )
+                self._pf_repo.mark_seen(
+                    conn, tenant_id, persona_id,
+                    [_hash_message(m) for m in chunk.messages],
+                )
 
             self._job_repo.update_status(
                 conn, tenant_id, job_id, status="DONE",
