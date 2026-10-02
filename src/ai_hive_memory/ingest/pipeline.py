@@ -5,13 +5,16 @@ Stages, in order:
   2. LitePIIScrubber.scrub_batch(...)            — redact SSN/CC
   3. IdempotencyGuard.filter_unseen(...)         — drop already-seen hashes
   4. Chunker.chunk(...)                          — Message[] → Chunk[]
-  5. ExtractionFanout.run(chunk)  per chunk      — 6 concurrent extractors
-     wrapped by ExtractionFailurePolicy.run_async
+  5. Extract per chunk                           — 6 concurrent extractors, each
+     wrapped by ExtractionFailurePolicy.run_async (retry with back-off); a
+     domain that still fails is recorded, and the chunk is accepted if at
+     least 5 of 6 domains succeeded (DIR-3.9)
   6. PendingFactRepository.persist(...)          — write each fact
 
 After processing all chunks, IngestJobRepository.update_status sets
 status=DONE (or FAILED) plus per-domain extraction counts in domain_status.
 """
+import asyncio
 import hashlib
 
 from pydantic import BaseModel as PydanticModel
@@ -23,8 +26,8 @@ from ai_hive_memory.ingest.adapters.pdf import PDFAdapter
 from ai_hive_memory.ingest.adapters.telegram import TelegramAdapter
 from ai_hive_memory.ingest.adapters.voice import VoiceAdapter
 from ai_hive_memory.ingest.adapters.whatsapp import WhatsAppAdapter
-from ai_hive_memory.ingest.chunker import Chunker
-from ai_hive_memory.ingest.extractors.base import ExtractionFanout
+from ai_hive_memory.ingest.chunker import Chunk, Chunker
+from ai_hive_memory.ingest.extractors.base import BaseExtractor, ExtractionFanout
 from ai_hive_memory.ingest.extractors.biography import BiographyExtractor
 from ai_hive_memory.ingest.extractors.experiences import ExperiencesExtractor
 from ai_hive_memory.ingest.extractors.preferences import PreferencesExtractor
@@ -107,6 +110,32 @@ class IngestPipeline:
         self._job_repo = IngestJobRepository()
         self._pf_repo = PendingFactRepository()
 
+    async def _extract(
+            self, chunk: Chunk,
+    ) -> tuple[dict[str, list[PydanticModel]], dict[str, Exception]]:
+        """Run every extractor on `chunk` under the failure policy.
+
+        One domain's failure does not stop the others: it is returned in the
+        second dict, and the partial-accept gate decides about the chunk.
+        """
+        loop = asyncio.get_running_loop()
+
+        async def _one(
+                ex: BaseExtractor,
+        ) -> tuple[str, list[PydanticModel] | Exception]:
+            try:
+                facts: list[PydanticModel] = await self._policy.run_async(
+                    ex.domain, lambda: loop.run_in_executor(None, ex.extract, chunk),
+                )
+            except Exception as e:
+                return ex.domain, e
+            return ex.domain, facts
+
+        outcomes = await asyncio.gather(*[_one(ex) for ex in self._fanout.extractors])
+        results = {d: o for d, o in outcomes if not isinstance(o, Exception)}
+        errors = {d: o for d, o in outcomes if isinstance(o, Exception)}
+        return results, errors
+
     async def run(  # noqa: PLR0913
             self, *, conn: Connection, tenant_id: str, persona_id: str,
             job_id: str, fmt: str, raw: bytes) -> None:
@@ -121,7 +150,9 @@ class IngestPipeline:
 
             domain_status: dict[str, str] = {d: "PENDING" for d in DOMAINS}
             for chunk in chunks:
-                results = await self._fanout.run(chunk)
+                results, extract_errors = await self._extract(chunk)
+                for domain, err in extract_errors.items():
+                    domain_status[domain] = f"FAILED: {err}"
                 # Compute source_hash per chunk from first message's canonical signature.
                 source_hash = (
                     _hash_message(chunk.messages[0])
