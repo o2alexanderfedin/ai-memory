@@ -6,10 +6,13 @@ from typing import Any
 from unittest.mock import MagicMock
 from uuid import uuid4
 
+from ai_hive_memory.ingest.adapters.whatsapp import WhatsAppAdapter
 from ai_hive_memory.ingest.failure_policy import ExtractionFailurePolicy
+from ai_hive_memory.ingest.idempotency import IdempotencyGuard
 from ai_hive_memory.ingest.pipeline import IngestPipeline
 from ai_hive_memory.storage.connection import request_scoped_conn
 from ai_hive_memory.storage.ingest_repository import (
+    ALL_DOMAINS,
     IngestJobRepository,
     PendingFactRepository,
 )
@@ -192,3 +195,112 @@ def test_pipeline_fails_job_when_two_domains_keep_failing() -> None:
         f"error was: {row['error']}"
     )
     assert error == row["error"]
+
+
+_PROMPT_KEYS = {
+    "biography": "biographical", "experiences": "experience/event",
+    "preferences": "preference facts", "psychometrics": "psychometric",
+    "social_circle": "social relationship", "work": "work and career",
+}
+
+
+class _CountingGateway:
+    """Fake LLM that counts calls per domain; domains in `failing` always raise."""
+
+    def __init__(self, failing: frozenset[str] = frozenset()) -> None:
+        self._failing = failing
+        self._lock = threading.Lock()
+        self.calls: dict[str, int] = dict.fromkeys(_PROMPT_KEYS, 0)
+
+    def complete(self, *, tier: object, messages: list[dict[str, str]],
+                 json_mode: bool, temperature: float = 0.0,
+                 max_tokens: int = 2048) -> str:
+        prompt = messages[0]["content"].lower()
+        domain = next(d for d, key in _PROMPT_KEYS.items() if key in prompt)
+        with self._lock:
+            self.calls[domain] += 1
+        if domain in self._failing:
+            raise TimeoutError(f"LLM timed out ({domain})")
+        if domain == "biography":
+            return json.dumps({"birth_date_precision": "year"})
+        return json.dumps({})
+
+
+def _upload_once(  # type: ignore[explicit-any]
+        tenant_id: str, persona_id: str, gw: _CountingGateway, raw: bytes,
+) -> tuple[dict[str, Any], dict[str, int]]:
+    """Run one upload; return the job row and its stored facts counted per domain."""
+    pipeline = IngestPipeline(
+        gateway=gw,  # type: ignore[arg-type]
+        failure_policy=ExtractionFailurePolicy(base_delay_s=0.0),
+    )
+    job_repo = IngestJobRepository()
+    gen = request_scoped_conn(tenant_id)
+    conn = next(gen)
+    try:
+        job_id = job_repo.create_job(conn, tenant_id, persona_id, fmt="whatsapp")
+        asyncio.run(pipeline.run(conn=conn, tenant_id=tenant_id, persona_id=persona_id,
+                                 job_id=job_id, fmt="whatsapp", raw=raw))
+        row = job_repo.get_job(conn, tenant_id, job_id)
+        assert row is not None
+        per_domain: dict[str, int] = {}
+        for f in PendingFactRepository().list_for_job(conn, tenant_id, job_id):
+            per_domain[f["domain"]] = per_domain.get(f["domain"], 0) + 1
+        return row, per_domain
+    finally:
+        gen.close()
+
+
+def test_reupload_after_one_domain_failed_extracts_only_that_domain() -> None:
+    """US-2.7 accepts a chunk with 5/6 domains; US-2.3 forbids duplicate facts.
+
+    So a re-upload must run the domain that failed, and only that domain.
+    """
+    tenant_id = str(uuid4())
+    persona_id = _bootstrap_persona(tenant_id)
+    raw = (b"[2026-04-21 12:00] Alice: I was born in 1990.\n"
+           b"[2026-04-21 12:01] Alice: I grew up in Lisbon.\n")
+
+    row1, facts1 = _upload_once(
+        tenant_id, persona_id, _CountingGateway(frozenset({"psychometrics"})), raw)
+    assert row1["status"] == "DONE", row1["error"]
+    assert row1["domain_status"]["psychometrics"].startswith("FAILED"), row1["domain_status"]
+    assert facts1 == {"biography": 1}, facts1
+
+    gw2 = _CountingGateway()
+    row2, facts2 = _upload_once(tenant_id, persona_id, gw2, raw)
+    assert row2["status"] == "DONE", row2["error"]
+    assert gw2.calls["psychometrics"] > 0, (
+        "re-upload did not extract psychometrics, the domain that failed the first time"
+    )
+    already_done = {d: n for d, n in gw2.calls.items() if d != "psychometrics" and n}
+    assert already_done == {}, (
+        f"re-upload extracted domains that already succeeded: {already_done}"
+    )
+    assert facts2 == {}, f"re-upload stored duplicate facts: {facts2}"
+
+    gw3 = _CountingGateway()
+    _, facts3 = _upload_once(tenant_id, persona_id, gw3, raw)
+    assert sum(gw3.calls.values()) == 0, f"third upload called the LLM: {gw3.calls}"
+    assert facts3 == {}, facts3
+
+
+def test_message_recorded_before_per_domain_tracking_is_not_extracted_again() -> None:
+    """Rows from before the domain column have domain '*': every domain processed them."""
+    tenant_id = str(uuid4())
+    persona_id = _bootstrap_persona(tenant_id)
+    raw = b"[2026-04-21 12:00] Alice: I was born in 1990.\n"
+    msg = WhatsAppAdapter().parse(raw)[0]
+    gen = request_scoped_conn(tenant_id)
+    conn = next(gen)
+    try:
+        PendingFactRepository().mark_seen(
+            conn, tenant_id, persona_id, [IdempotencyGuard().hash_for(msg)], [ALL_DOMAINS],
+        )
+    finally:
+        gen.close()
+
+    gw = _CountingGateway()
+    _, facts = _upload_once(tenant_id, persona_id, gw, raw)
+    assert sum(gw.calls.values()) == 0, f"an already ingested message was extracted: {gw.calls}"
+    assert facts == {}, facts

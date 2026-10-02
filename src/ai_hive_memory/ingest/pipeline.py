@@ -3,7 +3,8 @@
 Stages, in order:
   1. AdapterRouter.parse(format, raw)            — bytes → Message[]
   2. LitePIIScrubber.scrub_batch(...)            — redact SSN/CC
-  3. IdempotencyGuard.filter_unseen(...)         — drop already-seen hashes
+  3. _missing_domains(...)                       — drop messages every domain
+     has processed; group the rest by the domains still missing
   4. Chunker.chunk(...)                          — Message[] → Chunk[]
   5. Extract per chunk                           — 6 concurrent extractors, each
      wrapped by ExtractionFailurePolicy.run_async (retry with back-off); a
@@ -41,6 +42,7 @@ from ai_hive_memory.ingest.messages import Message
 from ai_hive_memory.ingest.pii import LitePIIScrubber
 from ai_hive_memory.llm.gateway import LLMGateway
 from ai_hive_memory.storage.ingest_repository import (
+    ALL_DOMAINS,
     IngestJobRepository,
     PendingFactRepository,
 )
@@ -111,10 +113,30 @@ class IngestPipeline:
         self._job_repo = IngestJobRepository()
         self._pf_repo = PendingFactRepository()
 
+    def _missing_domains(
+            self, conn: Connection, tenant_id: str, persona_id: str,
+            messages: list[Message],
+    ) -> dict[tuple[str, ...], list[Message]]:
+        """Group the messages by the domains that have not processed them yet.
+
+        Messages every domain has processed are dropped (US-2.3); so are
+        repeats within this upload. Order is kept within each group.
+        """
+        seen = self._pf_repo.seen_domains_for_persona(conn, tenant_id, persona_id)
+        work: dict[tuple[str, ...], list[Message]] = {}
+        for msg in IdempotencyGuard().filter_unseen(messages):
+            done = seen.get(_hash_message(msg), set())
+            if ALL_DOMAINS in done:
+                continue
+            missing = tuple(d for d in DOMAINS if d not in done)
+            if missing:
+                work.setdefault(missing, []).append(msg)
+        return work
+
     async def _extract(
-            self, chunk: Chunk,
+            self, chunk: Chunk, domains: tuple[str, ...],
     ) -> tuple[dict[str, list[PydanticModel]], dict[str, Exception]]:
-        """Run every extractor on `chunk` under the failure policy.
+        """Run the extractors of `domains` on `chunk` under the failure policy.
 
         One domain's failure does not stop the others: it is returned in the
         second dict, and the partial-accept gate decides about the chunk.
@@ -132,7 +154,9 @@ class IngestPipeline:
                 return ex.domain, e
             return ex.domain, facts
 
-        outcomes = await asyncio.gather(*[_one(ex) for ex in self._fanout.extractors])
+        outcomes = await asyncio.gather(
+            *[_one(ex) for ex in self._fanout.extractors if ex.domain in domains]
+        )
         results = {d: o for d, o in outcomes if not isinstance(o, Exception)}
         errors = {d: o for d, o in outcomes if isinstance(o, Exception)}
         return results, errors
@@ -144,14 +168,16 @@ class IngestPipeline:
             self._job_repo.update_status(conn, tenant_id, job_id, status="RUNNING")
             messages: list[Message] = self._router.parse(fmt, raw)
             scrubbed = list(self._scrubber.scrub_batch(messages))
-            seen = self._pf_repo.seen_hashes_for_persona(conn, tenant_id, persona_id)
-            guard = IdempotencyGuard(seen_hashes=seen)
-            unseen = list(guard.filter_unseen(scrubbed))
-            chunks = list(self._chunker.chunk(unseen, persona_id=persona_id))
+            work = self._missing_domains(conn, tenant_id, persona_id, scrubbed)
+            chunks = [
+                (domains, chunk)
+                for domains, msgs in work.items()
+                for chunk in self._chunker.chunk(msgs, persona_id=persona_id)
+            ]
 
             domain_status: dict[str, str] = {d: "PENDING" for d in DOMAINS}
-            for chunk in chunks:
-                results, extract_errors = await self._extract(chunk)
+            for domains, chunk in chunks:
+                results, extract_errors = await self._extract(chunk, domains)
                 for domain, err in extract_errors.items():
                     domain_status[domain] = f"FAILED: {err}"
                 # Compute source_hash per chunk from first message's canonical signature.
@@ -177,14 +203,17 @@ class IngestPipeline:
                         domain_status[domain] = "DONE"
                     except Exception as e:
                         domain_status[domain] = f"FAILED: {e}"
-                # 5/6 partial accept gate per chunk
+                # 5/6 partial accept gate per chunk; domains that processed
+                # these messages in an earlier upload count as succeeded.
+                failed = [d for d in domains if d not in succeeded]
                 self._policy.assert_partial_accept(
-                    succeeded_domains=succeeded,
+                    succeeded_domains=[d for d in DOMAINS if d not in failed],
                     all_domains=list(DOMAINS),
                 )
+                # Only the domains that succeeded: a re-upload retries the rest.
                 self._pf_repo.mark_seen(
                     conn, tenant_id, persona_id,
-                    [_hash_message(m) for m in chunk.messages],
+                    [_hash_message(m) for m in chunk.messages], succeeded,
                 )
 
             self._job_repo.update_status(

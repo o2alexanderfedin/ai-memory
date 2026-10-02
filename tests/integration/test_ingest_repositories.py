@@ -97,7 +97,7 @@ def test_persist_pending_fact_round_trips() -> None:
         gen.close()
 
 
-def test_seen_hashes_for_persona_returns_persisted_hashes() -> None:
+def test_seen_domains_for_persona_returns_persisted_hashes_with_their_domain() -> None:
     tenant_id = str(uuid4())
     persona_id = _bootstrap_persona(tenant_id)
     job_repo = IngestJobRepository()
@@ -109,7 +109,7 @@ def test_seen_hashes_for_persona_returns_persisted_hashes() -> None:
         fact = _make_biography_fact(persona_id)
         pf_repo.persist(conn, tenant_id, persona_id, job_id,
                         domain="biography", fact=fact, source_hash="abc123")
-        seen = pf_repo.seen_hashes_for_persona(conn, tenant_id, persona_id)
-        assert "abc123" in seen
+        seen = pf_repo.seen_domains_for_persona(conn, tenant_id, persona_id)
+        assert seen == {"abc123": {"biography"}}
     finally:
         gen.close()

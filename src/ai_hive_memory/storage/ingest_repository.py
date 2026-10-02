@@ -8,6 +8,7 @@ from sqlalchemy import text
 from sqlalchemy.engine import Connection
 
 _NUL = "\x00"
+ALL_DOMAINS = "*"  # ingested_messages.domain of rows that cover every domain
 
 
 def _without_nul(value: object) -> object:
@@ -112,32 +113,42 @@ class PendingFactRepository:
         ).mappings().fetchall()
         return [dict(r) for r in rows]
 
-    def seen_hashes_for_persona(self, conn: Connection, tenant_id: str,
-                                persona_id: str) -> set[str]:
-        # pending_facts.source_hash still counts: rows written before
-        # ingested_messages existed are the only record of those messages.
+    def seen_domains_for_persona(self, conn: Connection, tenant_id: str,
+                                 persona_id: str) -> dict[str, set[str]]:
+        """Map each ingested message hash to the domains that processed it.
+
+        ALL_DOMAINS ('*') stands for every domain (rows from before domains
+        were recorded).
+        """
+        # pending_facts.source_hash still counts, for its own domain: rows
+        # written before ingested_messages existed are the only record of
+        # those messages.
         rows = conn.execute(
             text("""
-                SELECT message_hash FROM ingested_messages
+                SELECT message_hash, domain FROM ingested_messages
                 WHERE tenant_id = :tid AND persona_id = :pid
                 UNION
-                SELECT source_hash FROM pending_facts
+                SELECT source_hash, domain FROM pending_facts
                 WHERE tenant_id = :tid AND persona_id = :pid
             """),
             {"tid": tenant_id, "pid": persona_id},
         ).fetchall()
-        return {r[0] for r in rows}
+        seen: dict[str, set[str]] = {}
+        for message_hash, domain in rows:
+            seen.setdefault(message_hash, set()).add(domain)
+        return seen
 
     def mark_seen(self, conn: Connection, tenant_id: str, persona_id: str,
-                  message_hashes: list[str]) -> None:
-        """Record every processed message so a re-upload skips all of them."""
-        if not message_hashes:
+                  message_hashes: list[str], domains: list[str]) -> None:
+        """Record that `domains` processed every message, so a re-upload skips them."""
+        if not message_hashes or not domains:
             return
         conn.execute(
             text("""
-                INSERT INTO ingested_messages (tenant_id, persona_id, message_hash)
-                VALUES (:tid, :pid, :hash)
+                INSERT INTO ingested_messages (tenant_id, persona_id, message_hash, domain)
+                VALUES (:tid, :pid, :hash, :domain)
                 ON CONFLICT DO NOTHING
             """),
-            [{"tid": tenant_id, "pid": persona_id, "hash": h} for h in message_hashes],
+            [{"tid": tenant_id, "pid": persona_id, "hash": h, "domain": d}
+             for h in message_hashes for d in domains],
         )
