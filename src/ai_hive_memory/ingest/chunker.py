@@ -24,7 +24,10 @@ class Chunker:
 
     Each chunk stays within *window_tokens*.  The last *overlap_tokens* worth
     of whole messages from one chunk are repeated at the start of the next so
-    downstream embedding has continuity context.
+    downstream embedding has continuity context; overlap is dropped, oldest
+    first, when it would push the next chunk past the window.  A single
+    message larger than the window is emitted alone, because messages are
+    never split (US-2.5).
 
     Token counting includes the [Speaker:Timestamp] overhead that
     SpeakerHeader will later add — avoids silent truncation at embed time.
@@ -79,6 +82,11 @@ class Chunker:
                         break
                     overlap.insert(0, prev)
                     overlap_tok += t
+
+                # Drop the oldest overlap messages until the incoming message
+                # fits; otherwise this chunk would exceed window_tokens.
+                while overlap and overlap_tok + msg_tok > self.window_tokens:
+                    overlap_tok -= self._tokens(overlap.pop(0))
 
                 window = overlap
                 window_tok = overlap_tok
