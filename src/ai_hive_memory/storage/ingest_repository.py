@@ -7,6 +7,24 @@ from pydantic import BaseModel
 from sqlalchemy import text
 from sqlalchemy.engine import Connection
 
+_NUL = "\x00"
+
+
+def _without_nul(value: object) -> object:
+    """Remove NUL characters from every string in a JSON-ready value.
+
+    Postgres text and jsonb cannot store NUL ("\\u0000"); one NUL anywhere in
+    a fact, for example copied from the uploaded message text, would make
+    the insert fail. A NUL carries no meaning in a conversation.
+    """
+    if isinstance(value, str):
+        return value.replace(_NUL, "")
+    if isinstance(value, list):
+        return [_without_nul(v) for v in value]
+    if isinstance(value, dict):
+        return {str(_without_nul(k)): _without_nul(v) for k, v in value.items()}
+    return value
+
 
 class IngestJobRepository:
     """CRUD for the ingest_jobs table."""
@@ -38,8 +56,8 @@ class IngestJobRepository:
             """),
             {
                 "tid": tenant_id, "jid": job_id, "status": status,
-                "ds": json.dumps(domain_status or {}),
-                "err": error,
+                "ds": json.dumps(_without_nul(domain_status or {})),
+                "err": None if error is None else error.replace(_NUL, ""),
             },
         )
 
@@ -74,7 +92,7 @@ class PendingFactRepository:
             {
                 "tid": tenant_id, "pid": persona_id, "pfid": pending_fact_id,
                 "jid": job_id, "domain": domain,
-                "payload": fact.model_dump_json(),
+                "payload": json.dumps(_without_nul(fact.model_dump(mode="json"))),
                 "hash": source_hash,
             },
         )

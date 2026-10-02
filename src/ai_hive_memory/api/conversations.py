@@ -33,19 +33,45 @@ def _conn_for(claims: CurrentTenant) -> Generator[Connection, None, None]:
     yield from request_scoped_conn(claims.tenant_id)
 
 
+def _mark_failed(tenant_id: str, job_id: str, error: Exception) -> None:
+    """Record the job as FAILED in a transaction of its own."""
+    gen = request_scoped_conn(tenant_id)
+    conn = next(gen)
+    try:
+        IngestJobRepository().update_status(
+            conn, tenant_id, job_id, status="FAILED", error=str(error),
+        )
+    finally:
+        gen.close()
+
+
 def _drive_pipeline(tenant_id: str, persona_id: str, job_id: str,
                     fmt: str, raw: bytes) -> None:
-    """Background task — opens its OWN connection (FastAPI's request conn is gone)."""
+    """Background task — opens its OWN connection (FastAPI's request conn is gone).
+
+    The pipeline runs in one transaction. A database error aborts that
+    transaction, and its rollback also removes the pipeline's own FAILED
+    update, so a failed job is marked FAILED again afterwards, in a new
+    transaction. Otherwise it would stay PENDING for ever.
+    """
     pipeline = IngestPipeline(gateway=LLMGateway())
     gen = request_scoped_conn(tenant_id)
     bg_conn = next(gen)
+    failure: Exception | None = None
     try:
         asyncio.run(pipeline.run(
             conn=bg_conn, tenant_id=tenant_id, persona_id=persona_id,
             job_id=job_id, fmt=fmt, raw=raw,
         ))
-    finally:
-        gen.close()
+    except Exception as e:
+        failure = e
+    try:
+        gen.close()  # commits, or rolls back an aborted transaction
+    except Exception as e:
+        failure = failure or e
+    if failure is not None:
+        _mark_failed(tenant_id, job_id, failure)
+        raise failure
 
 
 @router.post(

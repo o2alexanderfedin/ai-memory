@@ -7,6 +7,7 @@ from fastapi.testclient import TestClient
 
 DrivePipeline = Callable[[str, str, str, str, bytes], None]
 WaitDone = Callable[[TestClient, str, str], None]
+WaitEnded = Callable[[TestClient, str, str], dict[str, object]]
 
 # Only stops a hung pipeline from hanging the test run. A job that ends is
 # seen the moment it ends, however long it took; no test waits for this.
@@ -39,13 +40,18 @@ class JobCompletion:
                 self._event(job_id).set()
         return _drive
 
-    def wait_done(self, client: TestClient, token: str, job_id: str) -> None:
-        """Block until the job's pipeline has ended, then require status DONE."""
+    def wait_ended(self, client: TestClient, token: str, job_id: str) -> dict[str, object]:
+        """Block until the job's pipeline has ended; return the job as GET /jobs shows it."""
         if not self._event(job_id).wait(_HANG_GUARD_S):
             raise AssertionError(f"pipeline of job {job_id} never ended")
         resp = client.get(f"/jobs/{job_id}", headers={"Authorization": f"Bearer {token}"})
         assert resp.status_code == status.HTTP_200_OK, resp.text
-        body = resp.json()
+        body: dict[str, object] = resp.json()
+        return body
+
+    def wait_done(self, client: TestClient, token: str, job_id: str) -> None:
+        """Block until the job's pipeline has ended, then require status DONE."""
+        body = self.wait_ended(client, token, job_id)
         assert body["status"] == "DONE", (
             f"job {job_id} ended as {body['status']}: {body['error']}"
         )
