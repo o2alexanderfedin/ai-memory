@@ -65,3 +65,24 @@ def test_chunk_is_frozen_dataclass(persona_id: str | None) -> None:
     assert isinstance(chunk, Chunk)
     with pytest.raises((AttributeError, TypeError)):
         chunk.persona_id = "mutated"  # type: ignore[misc]
+
+
+def test_carried_overlap_never_pushes_a_chunk_past_the_window() -> None:
+    """Overlap plus the next message must still fit in window_tokens.
+
+    With header overhead, 'word '*10 is 31 tokens, 'word '*3 is 24 and
+    'word '*30 is 51.  The first chunk is [31, 24] = 55.  The 24-token message
+    fits the 26-token overlap budget, but 24 + 51 = 75 exceeds the 60-token
+    window, so the overlap must be dropped rather than carried.
+    """
+    chunker = Chunker(window_tokens=60, overlap_tokens=26)
+    msgs = [_msg("Alice", "word " * 10), _msg("Bob", "word " * 3),
+            _msg("Alice", "word " * 30)]
+    assert [chunker._tokens(m) for m in msgs] == [31, 24, 51]
+
+    chunks = list(chunker.chunk(msgs))
+
+    sizes = [sum(chunker._tokens(m) for m in c.messages) for c in chunks]
+    assert all(s <= chunker.window_tokens for s in sizes), sizes
+    # No message is lost while the overlap is dropped.
+    assert {id(m) for c in chunks for m in c.messages} == {id(m) for m in msgs}
