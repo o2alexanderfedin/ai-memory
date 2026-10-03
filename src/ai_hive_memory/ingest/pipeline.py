@@ -13,7 +13,8 @@ Stages, in order:
   6. PendingFactRepository.persist(...)          — write each fact
 
 After processing all chunks, IngestJobRepository.update_status sets
-status=DONE (or FAILED) plus per-domain extraction counts in domain_status.
+status=DONE (or FAILED) plus each domain's result in domain_status: FAILED
+if the domain failed in any chunk, DONE if it succeeded in every chunk it ran.
 The caller marks the job RUNNING before `run`, in a transaction of its own:
 a status written in `conn` becomes visible only when `conn` commits.
 """
@@ -77,6 +78,17 @@ def _default_fanout(gateway: LLMGateway) -> ExtractionFanout:
 def _hash_message(msg: Message) -> str:
     """Return SHA-256 hex digest of the message's canonical signature."""
     return hashlib.sha256(msg.canonical_signature().encode()).hexdigest()
+
+
+def _record(domain_status: dict[str, str], domain: str, outcome: str) -> None:
+    """Record one chunk's outcome for a domain; a failure in any chunk stays.
+
+    A domain that failed in one chunk did not process that chunk's messages,
+    and a re-upload extracts them again (DIR-3.9), so the job must show the
+    domain as FAILED even if a later chunk succeeded. The first error is kept.
+    """
+    if not domain_status[domain].startswith("FAILED"):
+        domain_status[domain] = outcome
 
 
 def _fact_has_content(fact: object) -> bool:
@@ -180,7 +192,7 @@ class IngestPipeline:
             for domains, chunk in chunks:
                 results, extract_errors = await self._extract(chunk, domains)
                 for domain, err in extract_errors.items():
-                    domain_status[domain] = f"FAILED: {err}"
+                    _record(domain_status, domain, f"FAILED: {err}")
                 # Compute source_hash per chunk from first message's canonical signature.
                 source_hash = (
                     _hash_message(chunk.messages[0])
@@ -201,9 +213,9 @@ class IngestPipeline:
                                     domain=domain, fact=fact, source_hash=source_hash,
                                 )
                         succeeded.append(domain)
-                        domain_status[domain] = "DONE"
+                        _record(domain_status, domain, "DONE")
                     except Exception as e:
-                        domain_status[domain] = f"FAILED: {e}"
+                        _record(domain_status, domain, f"FAILED: {e}")
                 # 5/6 partial accept gate per chunk; domains that processed
                 # these messages in an earlier upload count as succeeded.
                 failed = [d for d in domains if d not in succeeded]
