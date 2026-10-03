@@ -42,6 +42,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 START_TIMEOUT_S = 30.0
 DEAD_PROXY = "http://127.0.0.1:9"
 PERSONA_ROUNDS = 50
+JOB_TIMEOUT_S = 30.0
 
 
 class _FakeChat(BaseHTTPRequestHandler):
@@ -213,3 +214,33 @@ def test_created_persona_is_visible_to_the_next_request(live_server: LiveServer)
         f"{missing} of {PERSONA_ROUNDS} personas were missing from the request "
         "right after their 201"
     )
+
+
+def test_upload_is_ingested_with_the_fake_llm(live_server: LiveServer) -> None:
+    """The main user path: signup, persona, WhatsApp upload, job DONE."""
+    client = live_server.client
+    assert client.get("/openapi.json").status_code == status.HTTP_200_OK
+    auth = _signup(client)
+    persona = client.post("/personas", headers=auth)
+    assert persona.status_code == status.HTTP_201_CREATED, persona.text
+
+    upload = client.post(
+        f"/personas/{persona.json()['persona_id']}/conversations", headers=auth,
+        json={"format": "whatsapp", "content": "[2026-04-21 12:00] Alice: I work at Acme\n"},
+    )
+    assert upload.status_code == status.HTTP_202_ACCEPTED, upload.text
+    job_id = upload.json()["job_id"]
+
+    deadline = time.monotonic() + JOB_TIMEOUT_S
+    job = client.get(f"/jobs/{job_id}", headers=auth)
+    while job.status_code == status.HTTP_200_OK and job.json()["status"] in {
+        "PENDING", "RUNNING",
+    }:
+        assert time.monotonic() < deadline, f"job not finished: {job.text}"
+        time.sleep(0.2)
+        job = client.get(f"/jobs/{job_id}", headers=auth)
+    assert job.status_code == status.HTTP_200_OK, job.text
+    assert job.json()["status"] == "DONE", (
+        f"{job.text}\n{live_server.log.read_text()[-4000:]}"
+    )
+    assert _FakeChat.calls > 0, "the job finished without asking the LLM"
