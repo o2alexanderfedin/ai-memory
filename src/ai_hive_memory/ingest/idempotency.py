@@ -6,6 +6,22 @@ from dataclasses import dataclass, field
 from ai_hive_memory.ingest.messages import Message
 
 
+def number_repeats(msgs: list[Message]) -> list[Message]:
+    """Number the messages of one upload that repeat (speaker, timestamp, text).
+
+    The first occurrence keeps repeat=1 and so its old hash; the n-th gets
+    repeat=n. Two genuine repeats then hash differently and both are kept,
+    while the same export uploaded again gives the same numbers (US-2.3).
+    """
+    seen: dict[tuple[str, str, str], int] = {}
+    numbered: list[Message] = []
+    for msg in msgs:
+        key = (msg.speaker, msg.timestamp.isoformat(), msg.text)
+        seen[key] = seen.get(key, 0) + 1
+        numbered.append(msg.model_copy(update={"repeat": seen[key]}))
+    return numbered
+
+
 @dataclass
 class IdempotencyGuard:
     """Filters out messages already seen, using SHA-256 of their canonical signature."""
