@@ -7,6 +7,7 @@ from unittest.mock import MagicMock
 from uuid import uuid4
 
 from ai_hive_memory.ingest.adapters.whatsapp import WhatsAppAdapter
+from ai_hive_memory.ingest.chunker import Chunker
 from ai_hive_memory.ingest.failure_policy import ExtractionFailurePolicy
 from ai_hive_memory.ingest.idempotency import IdempotencyGuard
 from ai_hive_memory.ingest.pipeline import IngestPipeline
@@ -304,3 +305,42 @@ def test_message_recorded_before_per_domain_tracking_is_not_extracted_again() ->
     _, facts = _upload_once(tenant_id, persona_id, gw, raw)
     assert sum(gw.calls.values()) == 0, f"an already ingested message was extracted: {gw.calls}"
     assert facts == {}, facts
+
+
+def test_domain_that_failed_in_an_earlier_chunk_is_reported_failed() -> None:
+    """A later chunk's success must not hide an earlier chunk's failure (US-2.8, DIR-3.9).
+
+    The failed chunk's messages are not recorded for that domain, so a
+    re-upload extracts them again; the job must say so.
+    """
+    max_attempts = ExtractionFailurePolicy().max_attempts
+    # Every psychometrics call in chunk 1 fails; the first call in chunk 2 succeeds.
+    gw = _FlakyGateway({"psychometric": max_attempts})
+    tenant_id = str(uuid4())
+    persona_id = _bootstrap_persona(tenant_id)
+    raw = (b"[2026-04-21 12:00] Alice: I was born in 1990.\n"
+           b"[2026-04-21 12:01] Alice: I grew up in Lisbon.\n")
+    one_message = Chunker()._tokens(WhatsAppAdapter().parse(raw)[0])
+    pipeline = IngestPipeline(
+        gateway=gw,  # type: ignore[arg-type]
+        chunker=Chunker(window_tokens=one_message + 1, overlap_tokens=0),
+        failure_policy=ExtractionFailurePolicy(base_delay_s=0.0),
+    )
+    gen = request_scoped_conn(tenant_id)
+    conn = next(gen)
+    try:
+        job_id = IngestJobRepository().create_job(conn, tenant_id, persona_id, fmt="whatsapp")
+        asyncio.run(pipeline.run(conn=conn, tenant_id=tenant_id, persona_id=persona_id,
+                                 job_id=job_id, fmt="whatsapp", raw=raw))
+    finally:
+        gen.close()
+    row, _ = _job(tenant_id, job_id)
+    assert gw.calls["psychometric"] == max_attempts + 1, (
+        f"expected two chunks; psychometrics was called {gw.calls['psychometric']} time(s)"
+    )
+    assert row["status"] == "DONE", row["error"]
+    assert row["domain_status"]["psychometrics"].startswith("FAILED"), (
+        f"psychometrics failed in chunk 1 but the job shows {row['domain_status']}"
+    )
+    others = {d: s for d, s in row["domain_status"].items() if d != "psychometrics"}
+    assert set(others.values()) == {"DONE"}, row["domain_status"]
