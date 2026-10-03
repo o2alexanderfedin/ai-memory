@@ -344,3 +344,54 @@ def test_domain_that_failed_in_an_earlier_chunk_is_reported_failed() -> None:
     )
     others = {d: s for d, s in row["domain_status"].items() if d != "psychometrics"}
     assert set(others.values()) == {"DONE"}, row["domain_status"]
+
+
+class _RecordingGateway(_CountingGateway):
+    """_CountingGateway that also keeps every transcript sent to the LLM."""
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.transcripts: list[str] = []
+
+    def complete(self, *, tier: object, messages: list[dict[str, str]],
+                 json_mode: bool, temperature: float = 0.0,
+                 max_tokens: int = 2048) -> str:
+        with self._lock:
+            self.transcripts.append(messages[1]["content"])
+        return super().complete(tier=tier, messages=messages, json_mode=json_mode,
+                                temperature=temperature, max_tokens=max_tokens)
+
+
+def test_same_message_sent_twice_in_one_minute_is_kept_twice() -> None:
+    """WhatsApp shows minutes only, so a real repeat has the same (speaker, ts, text).
+
+    Both messages must reach extraction; uploading the export again must still
+    add nothing (US-2.3).
+    """
+    tenant_id = str(uuid4())
+    persona_id = _bootstrap_persona(tenant_id)
+    raw = (b"[2026-04-21 12:00] Alice: I quit my job.\n"
+           b"[2026-04-21 12:00] Bob: What?\n"
+           b"[2026-04-21 12:00] Alice: I quit my job.\n")
+
+    gw1 = _RecordingGateway()
+    row1, facts1 = _upload_once(tenant_id, persona_id, gw1, raw)
+    assert row1["status"] == "DONE", row1["error"]
+    repeats = {t.count("] I quit my job.") for t in gw1.transcripts}
+    assert repeats == {2}, (
+        f"the LLM saw Alice's repeated message {repeats} time(s) per call; expected 2"
+    )
+    gen = request_scoped_conn(tenant_id)
+    conn = next(gen)
+    try:
+        recorded = PendingFactRepository().seen_domains_for_persona(conn, tenant_id, persona_id)
+    finally:
+        gen.close()
+    lines = len(raw.splitlines())
+    assert len(recorded) == lines, f"expected {lines} recorded messages, got {len(recorded)}"
+    assert facts1 == {"biography": 1}, facts1
+
+    gw2 = _RecordingGateway()
+    _, facts2 = _upload_once(tenant_id, persona_id, gw2, raw)
+    assert sum(gw2.calls.values()) == 0, f"re-upload called the LLM: {gw2.calls}"
+    assert facts2 == {}, f"re-upload stored new facts: {facts2}"

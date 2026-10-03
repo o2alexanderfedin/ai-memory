@@ -3,6 +3,7 @@
 Stages, in order:
   1. AdapterRouter.parse(format, raw)            — bytes → Message[]
   2. LitePIIScrubber.scrub_batch(...)            — redact SSN/CC
+  2b. number_repeats(...)                        — number genuine repeats
   3. _missing_domains(...)                       — drop messages every domain
      has processed; group the rest by the domains still missing
   4. Chunker.chunk(...)                          — Message[] → Chunk[]
@@ -40,7 +41,7 @@ from ai_hive_memory.ingest.extractors.psychometrics import PsychometricsExtracto
 from ai_hive_memory.ingest.extractors.social_circle import SocialCircleExtractor
 from ai_hive_memory.ingest.extractors.work import WorkExtractor
 from ai_hive_memory.ingest.failure_policy import ExtractionFailurePolicy
-from ai_hive_memory.ingest.idempotency import IdempotencyGuard
+from ai_hive_memory.ingest.idempotency import IdempotencyGuard, number_repeats
 from ai_hive_memory.ingest.messages import Message
 from ai_hive_memory.ingest.pii import LitePIIScrubber
 from ai_hive_memory.llm.gateway import LLMGateway
@@ -180,7 +181,8 @@ class IngestPipeline:
             job_id: str, fmt: str, raw: bytes) -> None:
         try:
             messages: list[Message] = self._router.parse(fmt, raw)
-            scrubbed = list(self._scrubber.scrub_batch(messages))
+            # After scrubbing: redaction can make two different messages equal.
+            scrubbed = number_repeats(list(self._scrubber.scrub_batch(messages)))
             work = self._missing_domains(conn, tenant_id, persona_id, scrubbed)
             chunks = [
                 (domains, chunk)
