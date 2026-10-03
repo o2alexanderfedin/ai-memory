@@ -14,6 +14,8 @@ Stages, in order:
 
 After processing all chunks, IngestJobRepository.update_status sets
 status=DONE (or FAILED) plus per-domain extraction counts in domain_status.
+The caller marks the job RUNNING before `run`, in a transaction of its own:
+a status written in `conn` becomes visible only when `conn` commits.
 """
 import asyncio
 import hashlib
@@ -165,7 +167,6 @@ class IngestPipeline:
             self, *, conn: Connection, tenant_id: str, persona_id: str,
             job_id: str, fmt: str, raw: bytes) -> None:
         try:
-            self._job_repo.update_status(conn, tenant_id, job_id, status="RUNNING")
             messages: list[Message] = self._router.parse(fmt, raw)
             scrubbed = list(self._scrubber.scrub_batch(messages))
             work = self._missing_domains(conn, tenant_id, persona_id, scrubbed)
