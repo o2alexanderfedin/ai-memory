@@ -32,7 +32,7 @@ def _conn_for(claims: CurrentTenant) -> Generator[Connection, None, None]:
 def get_job(
     job_id: str,
     claims: CurrentTenant,
-    conn: Annotated[Connection, Depends(_conn_for)],
+    conn: Annotated[Connection, Depends(_conn_for, scope="function")],
 ) -> JobStatusResponse:
     # Job ids are UUIDs; any other string names no job. Without this check
     # Postgres rejects the cast and the client gets a 500.

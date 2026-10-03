@@ -32,7 +32,7 @@ def _conn_for(claims: CurrentTenant) -> Generator[Connection, None, None]:
 @router.post("/personas", status_code=status.HTTP_201_CREATED)
 def create_persona(
     claims: CurrentTenant,
-    conn: Annotated[Connection, Depends(_conn_for)],
+    conn: Annotated[Connection, Depends(_conn_for, scope="function")],
 ) -> CreatePersonaResponse:
     persona_id = _repo.create_persona(conn, claims.tenant_id)
     return CreatePersonaResponse(persona_id=persona_id)
@@ -41,6 +41,6 @@ def create_persona(
 @router.get("/personas")
 def list_personas(
     claims: CurrentTenant,  # used by Depends(_conn_for) for tenant scoping
-    conn: Annotated[Connection, Depends(_conn_for)],
+    conn: Annotated[Connection, Depends(_conn_for, scope="function")],
 ) -> ListPersonasResponse:
     return ListPersonasResponse(personas=_repo.list_personas(conn))

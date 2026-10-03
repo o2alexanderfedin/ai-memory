@@ -106,7 +106,7 @@ def create_conversation(
     req: CreateConversationRequest,
     background: BackgroundTasks,
     claims: CurrentTenant,
-    conn: Annotated[Connection, Depends(_conn_for)],
+    conn: Annotated[Connection, Depends(_conn_for, scope="function")],
 ) -> CreateConversationResponse:
     if req.format not in SUPPORTED_FORMATS:
         raise HTTPException(status.HTTP_400_BAD_REQUEST,
