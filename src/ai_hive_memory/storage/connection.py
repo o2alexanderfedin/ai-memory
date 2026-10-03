@@ -2,6 +2,11 @@
 
 Yields a SQLAlchemy Connection that has `app.current_tenant_id` set for the
 caller's tenant. Used as a FastAPI dependency in per-tenant API handlers.
+
+Declare that dependency with `Depends(..., scope="function")`. The
+transaction commits when the generator closes; with FastAPI's default
+scope that happens after the response has been sent, so a client could get
+201 for a row that its next request cannot see yet.
 """
 from collections.abc import Generator
 from contextlib import suppress

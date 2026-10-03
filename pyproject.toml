@@ -4,7 +4,7 @@ version = "0.0.1"
 description = "Per-persona structured memory service"
 requires-python = ">=3.12"
 dependencies = [
-    "fastapi>=0.110",
+    "fastapi>=0.121",  # Depends(scope="function")
     "uvicorn[standard]>=0.27",
     "pydantic>=2.6",
     "pydantic-settings>=2.2",
